@@ -1,250 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-
-type Kind = "task" | "tab" | "note" | "search" | "badge" | "next";
-
-type Piece = {
-  id: string;
-  kind: Kind;
-  text: string;
-  rot: number;
-  fade: number;
-  z: number;
-  mobile: boolean;
-  top: string;
-  left: string;
-  mTop?: string;
-  mLeft?: string;
-  width?: string;
-  tone?: "yellow" | "pink";
-};
-
-const pieces: Piece[] = [
-  {
-    id: "next",
-    kind: "next",
-    text: "unknown",
-    rot: -5,
-    fade: 1,
-    z: 30,
-    mobile: true,
-    top: "1%",
-    left: "3%",
-    mTop: "0%",
-    mLeft: "0%",
-  },
-  {
-    id: "badge",
-    kind: "badge",
-    text: "37 unread",
-    rot: 4,
-    fade: 1,
-    z: 28,
-    mobile: true,
-    top: "0%",
-    left: "72%",
-    mTop: "0%",
-    mLeft: "62%",
-  },
-  {
-    id: "tax",
-    kind: "note",
-    text: "taxes??",
-    tone: "yellow",
-    rot: -7,
-    fade: 0.92,
-    z: 18,
-    mobile: true,
-    top: "18%",
-    left: "34%",
-    mTop: "32%",
-    mLeft: "58%",
-  },
-  {
-    id: "gst",
-    kind: "task",
-    text: "GST number",
-    rot: -3,
-    fade: 1,
-    z: 16,
-    mobile: true,
-    top: "20%",
-    left: "4%",
-    mTop: "36%",
-    mLeft: "0%",
-  },
-  {
-    id: "tab-a",
-    kind: "tab",
-    text: "business account login",
-    rot: 2,
-    fade: 0.95,
-    z: 8,
-    mobile: true,
-    top: "14%",
-    left: "70%",
-    mTop: "64%",
-    mLeft: "0%",
-    width: "168px",
-  },
-  {
-    id: "tab-b",
-    kind: "tab",
-    text: "bookkeeping app",
-    rot: -3,
-    fade: 0.8,
-    z: 7,
-    mobile: false,
-    top: "20%",
-    left: "64%",
-    width: "148px",
-  },
-  {
-    id: "tab-c",
-    kind: "tab",
-    text: "insurance quotes",
-    rot: 4,
-    fade: 0.62,
-    z: 6,
-    mobile: false,
-    top: "26%",
-    left: "74%",
-    width: "142px",
-  },
-  {
-    id: "wcb",
-    kind: "task",
-    text: "WCB",
-    rot: 5,
-    fade: 0.7,
-    z: 5,
-    mobile: false,
-    top: "7%",
-    left: "48%",
-    width: "128px",
-  },
-  {
-    id: "bank",
-    kind: "task",
-    text: "business bank account",
-    rot: -6,
-    fade: 0.58,
-    z: 9,
-    mobile: true,
-    top: "34%",
-    left: "-10%",
-    mTop: "86%",
-    mLeft: "0%",
-    width: "206px",
-  },
-  {
-    id: "ins",
-    kind: "task",
-    text: "insurance",
-    rot: 3,
-    fade: 1,
-    z: 15,
-    mobile: true,
-    top: "40%",
-    left: "30%",
-    mTop: "74%",
-    mLeft: "4%",
-  },
-  {
-    id: "books",
-    kind: "task",
-    text: "bookkeeping",
-    rot: -2,
-    fade: 1,
-    z: 14,
-    mobile: false,
-    top: "52%",
-    left: "12%",
-  },
-  {
-    id: "invoices",
-    kind: "task",
-    text: "invoices",
-    rot: 5,
-    fade: 0.9,
-    z: 13,
-    mobile: false,
-    top: "48%",
-    left: "58%",
-  },
-  {
-    id: "call",
-    kind: "note",
-    text: "call bank",
-    tone: "pink",
-    rot: 6,
-    fade: 0.58,
-    z: 17,
-    mobile: false,
-    top: "46%",
-    left: "82%",
-  },
-  {
-    id: "estimate",
-    kind: "task",
-    text: "estimate template",
-    rot: -4,
-    fade: 0.85,
-    z: 12,
-    mobile: false,
-    top: "64%",
-    left: "40%",
-  },
-  {
-    id: "licence",
-    kind: "task",
-    text: "licensing",
-    rot: 4,
-    fade: 0.52,
-    z: 4,
-    mobile: false,
-    top: "70%",
-    left: "-8%",
-  },
-  {
-    id: "app",
-    kind: "task",
-    text: "which app to buy",
-    rot: 2,
-    fade: 0.78,
-    z: 10,
-    mobile: false,
-    top: "76%",
-    left: "18%",
-  },
-  {
-    id: "lawyer",
-    kind: "task",
-    text: "hire a lawyer?",
-    rot: -3,
-    fade: 0.68,
-    z: 19,
-    mobile: true,
-    top: "82%",
-    left: "48%",
-    mTop: "50%",
-    mLeft: "2%",
-  },
-  {
-    id: "search",
-    kind: "search",
-    text: "do i need gst before first job",
-    rot: -2,
-    fade: 1,
-    z: 22,
-    mobile: true,
-    top: "86%",
-    left: "4%",
-    mTop: "16%",
-    mLeft: "0%",
-  },
-];
+import { ChaosDesk } from "./how/ChaosDesk";
 
 export function HowItWorks() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -363,11 +120,11 @@ export function HowItWorks() {
 
   return (
     <section id="how">
-      <div className="mx-auto flex max-w-[1000px] flex-col gap-10 px-6 pt-12 pb-20 desk:px-8 desk:pb-28">
+      <div className="mx-auto flex max-w-[1000px] flex-col gap-10 px-6 pt-12 pb-8 desk:px-8 desk:pb-12">
         <div className="flex flex-col gap-3.5">
           <h2 className="m-0 text-[clamp(1.75rem,3vw,2.125rem)] leading-[1.15] font-medium tracking-[-0.03em]">
-            A search tells you what exists.
-            <br />
+            A search tells you what exists.{" "}
+            <br className="hidden tab:block" />
             <span className="text-muted">Groundwork tells you what&apos;s next.</span>
           </h2>
           <p className="m-0 max-w-[520px] text-sm leading-[1.6] text-secondary">
@@ -376,8 +133,9 @@ export function HowItWorks() {
           </p>
         </div>
 
+        <div className="flex flex-col">
         <div ref={rootRef} className="relative grid grid-cols-1 desk:grid-cols-2">
-          <div className="flex flex-col gap-4 overflow-hidden bg-[#F4F4F2] p-6 desk:p-7">
+          <div className="flex flex-col gap-4 overflow-x-clip bg-[#F4F4F2] p-6 pb-6 desk:p-7 desk:pb-7">
             <div className="flex gap-1.5">
               <span className="tag">On your own</span>
               <span className="tag text-[#B4531F]">
@@ -394,11 +152,7 @@ export function HowItWorks() {
                 <span className="mono mono-literal text-[10px]">fifty tabs</span> open.
               </p>
             </div>
-            <div className="relative mt-1 h-[360px] overflow-hidden desk:h-[372px]">
-              {pieces.map((piece) => (
-                <Scatter key={piece.id} piece={piece} />
-              ))}
-            </div>
+            <ChaosDesk />
           </div>
 
           <div className="pointer-events-none relative z-20 h-8 desk:absolute desk:inset-y-0 desk:left-1/2 desk:h-auto desk:w-0">
@@ -433,7 +187,7 @@ export function HowItWorks() {
             <div className="flex max-w-[280px] flex-col gap-1">
               <h3 className="m-0 text-lg font-semibold tracking-[-0.01em]">One step at a time.</h3>
               <p className="m-0 text-xs leading-[1.5] text-secondary">
-                Ordered by what has to happen first. A person at the hard parts.
+                Ordered by what has to happen first. A professional at the hard parts.
               </p>
             </div>
             <div className="mt-2 flex flex-col gap-3 rounded-card border border-[#D6E7DB] bg-white p-5 desk:p-6">
@@ -483,7 +237,7 @@ export function HowItWorks() {
                 <span className="mono mono-literal ml-auto shrink-0 text-[10px]">today</span>
               </div>
             </div>
-            <div className="absolute top-24 right-4 flex size-11 items-center justify-center rounded-[10px] bg-white shadow-[0_10px_24px_-12px_rgba(0,0,0,0.35)] desk:top-28 desk:right-[18px]">
+            <div className="absolute top-5 right-4 flex size-10 items-center justify-center rounded-[10px] bg-white shadow-[0_10px_24px_-12px_rgba(0,0,0,0.35)] tab:top-24 tab:size-11 desk:top-28 desk:right-[18px]">
               <svg
                 width="20"
                 height="20"
@@ -500,101 +254,13 @@ export function HowItWorks() {
             </div>
           </div>
         </div>
+        <div className="grid grid-cols-1 desk:grid-cols-2" aria-hidden="true">
+          <div className="hidden h-24 bg-gradient-to-b from-[#F4F4F2] to-white desk:block" />
+          <div className="h-20 bg-gradient-to-b from-[#E7F2EA] to-white desk:h-24" />
+        </div>
+        </div>
       </div>
     </section>
-  );
-}
-
-function Scatter({ piece }: { piece: Piece }) {
-  return (
-    <div
-      className={`scatter absolute top-[var(--m-top)] left-[var(--m-left)] desk:top-[var(--d-top)] desk:left-[var(--d-left)] ${piece.mobile ? "" : "hidden desk:block"}`}
-      data-rot={piece.rot}
-      data-fade={piece.fade}
-      style={{
-        zIndex: piece.z,
-        width: piece.width,
-        ["--m-top" as string]: piece.mTop ?? piece.top,
-        ["--m-left" as string]: piece.mLeft ?? piece.left,
-        ["--d-top" as string]: piece.top,
-        ["--d-left" as string]: piece.left,
-      }}
-    >
-      <PieceBody piece={piece} />
-    </div>
-  );
-}
-
-function PieceBody({ piece }: { piece: Piece }) {
-  if (piece.kind === "task") {
-    return (
-      <div className="flex items-center gap-1.5 rounded-lg border border-[#E4E4E1] bg-white px-2 py-1.5 text-[12px] font-medium whitespace-nowrap shadow-[0_8px_16px_-12px_rgba(17,17,17,0.55)]">
-        <span className="mono mono-literal text-[11px]">?</span>
-        {piece.text}
-        <span className="mono mono-literal ml-1 text-[10px]">someday</span>
-      </div>
-    );
-  }
-
-  if (piece.kind === "tab") {
-    return (
-      <div
-        className="flex h-6 items-center gap-1.5 rounded-t-md border border-[#E0E0DC] bg-[#E7E7E3] px-2"
-        style={{ width: piece.width }}
-      >
-        <span className="size-2.5 shrink-0 rounded-[2px] bg-[#C4C4C0]" />
-        <span className="mono mono-literal truncate text-[10px] text-secondary">{piece.text}</span>
-      </div>
-    );
-  }
-
-  if (piece.kind === "note") {
-    return (
-      <div
-        className="flex size-[70px] items-center justify-center text-[12px] font-medium shadow-[0_8px_16px_-12px_rgba(17,17,17,0.4)]"
-        style={{ background: piece.tone === "pink" ? "#F5DADA" : "#F7EFC2" }}
-      >
-        {piece.text}
-      </div>
-    );
-  }
-
-  if (piece.kind === "search") {
-    return (
-      <div className="flex max-w-[230px] items-center gap-1.5 rounded-full border border-[#E3E6E1] bg-white px-2.5 py-1.5 shadow-[0_8px_16px_-12px_rgba(17,17,17,0.45)]">
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="#8A8A8E"
-          strokeWidth="2"
-          strokeLinecap="round"
-          aria-hidden="true"
-        >
-          <circle cx="11" cy="11" r="7" />
-          <path d="m20 20-3.5-3.5" />
-        </svg>
-        <span className="border-r border-ink pr-0.5 text-[11px] whitespace-nowrap">{piece.text}</span>
-      </div>
-    );
-  }
-
-  if (piece.kind === "badge") {
-    return (
-      <span className="mono mono-literal inline-flex rounded-full bg-ink px-2 py-1 text-[10px] text-white">
-        {piece.text}
-      </span>
-    );
-  }
-
-  return (
-    <div className="flex items-center gap-2 text-[13px] whitespace-nowrap">
-      <span>Next step:</span>
-      <span className="mono mono-literal border border-dashed border-[#C9C9C6] bg-white px-2 py-0.5 text-xs">
-        {piece.text}
-      </span>
-    </div>
   );
 }
 

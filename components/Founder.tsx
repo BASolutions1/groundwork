@@ -9,8 +9,8 @@ export function Founder() {
           </h2>
           <p className="m-0 max-w-[460px] text-base leading-[1.55] text-[#A1A1A6]">
             Registration, taxes, insurance, a website, who to call. The same work shows up
-            in every industry. Groundwork puts it in order, and stays on the line when a
-            step needs a person. The BASolutions team handles the web and systems side.
+            in every industry. Groundwork puts it in order, stays on the line when a step
+            needs someone who's done it, and handles the web and systems side.
           </p>
         </div>
         <div className="flex aspect-[4/3] items-center justify-center rounded-[6px] bg-[#1C1C1E] text-[13px] text-[#6E6E73]">

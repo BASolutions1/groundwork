@@ -12,13 +12,13 @@ const week = [
 export function HeroSequence() {
   return (
     <div
-      className="relative h-[500px] overflow-hidden rounded-[20px] bg-[linear-gradient(165deg,#F4F8F5_0%,#D9ECE1_55%,#C3E3D0_100%)] desk:h-[560px]"
+      className="relative h-[420px] overflow-hidden rounded-[20px] bg-[linear-gradient(165deg,#F4F8F5_0%,#D9ECE1_55%,#C3E3D0_100%)] tab:h-[500px] desk:h-[560px]"
       role="img"
       aria-label="A simple dashboard of your registration list, with the next step in front."
     >
       <div className="pointer-events-none absolute -top-16 right-0 size-72 rounded-full bg-[radial-gradient(circle,rgba(31,138,76,0.18)_0%,rgba(31,138,76,0)_70%)]" />
 
-      <div className="absolute top-7 right-3 left-4 overflow-hidden rounded-[14px] border border-white/80 bg-white shadow-[0_24px_50px_-28px_rgba(17,17,17,0.4)] desk:right-4 desk:left-14">
+      <div className="absolute top-5 right-3 left-3 overflow-hidden rounded-[14px] border border-white/80 bg-white shadow-[0_24px_50px_-28px_rgba(17,17,17,0.4)] tab:top-7 tab:right-4 tab:left-8 desk:left-14">
         <WindowBar />
         <div className="grid grid-cols-1 gap-4 p-4 desk:grid-cols-[minmax(0,1fr)_168px] desk:p-5 desk:pb-8">
           <div className="flex flex-col gap-2">
@@ -52,7 +52,7 @@ export function HeroSequence() {
         </div>
       </div>
 
-      <div className="absolute bottom-4 left-3 z-10 w-[232px] rounded-[14px] border border-[#E3E6E1] bg-white p-3.5 shadow-[0_22px_44px_-16px_rgba(17,17,17,0.45)] desk:bottom-14 desk:left-4">
+      <div className="absolute bottom-3 left-3 z-10 w-[min(232px,calc(100%-1.5rem))] rounded-[14px] border border-[#E3E6E1] bg-white p-3.5 shadow-[0_22px_44px_-16px_rgba(17,17,17,0.45)] tab:bottom-6 desk:bottom-14 desk:left-4">
         <div className="mb-2 flex items-baseline justify-between">
           <span className="text-[13px] font-semibold">Your list</span>
           <span className="mono mono-literal text-[10px]">3 of 8</span>

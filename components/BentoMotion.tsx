@@ -43,7 +43,7 @@ export function BentoMotion({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div ref={gridRef} className="grid grid-cols-1 gap-4 desk:grid-cols-6">
+    <div ref={gridRef} className="grid grid-cols-1 gap-4 tab:grid-cols-2 desk:grid-cols-6">
       {children}
     </div>
   );

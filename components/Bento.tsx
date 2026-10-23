@@ -19,10 +19,10 @@ const cards: Card[] = [
     description:
       "Name, business number, GST, WCB, insurance, licensing. Each step unlocks when the one before it is done.",
     vignette: "register",
-    spanClass: "desk:col-span-4",
+    spanClass: "tab:col-span-2 desk:col-span-4",
     surface: "bg-card-tint",
     minHeight: 400,
-    paddingClass: "px-7 pt-7",
+    paddingClass: "px-5 pt-5 pb-5 desk:px-7 desk:pt-7 desk:pb-0",
     descriptionClass: "text-secondary",
     textClass: "max-w-[420px]",
   },
@@ -34,7 +34,7 @@ const cards: Card[] = [
     spanClass: "desk:col-span-2",
     surface: "bg-card-tint",
     minHeight: 400,
-    paddingClass: "p-7",
+    paddingClass: "p-5 desk:p-7",
     descriptionClass: "text-secondary",
     textClass: "",
   },
@@ -45,19 +45,19 @@ const cards: Card[] = [
     spanClass: "desk:col-span-2",
     surface: "bg-card-tint",
     minHeight: 380,
-    paddingClass: "p-7",
+    paddingClass: "p-5 desk:p-7",
     descriptionClass: "text-secondary",
     textClass: "",
   },
   {
     title: "Supercharge your online presence",
     description:
-      "Proven local SEO, done for you by the BASolutions team. Show up when people search, including in AI answers, so you can focus on the work.",
+      "Proven local SEO, done for you. Show up when people search, including in AI answers, so you can focus on the work.",
     vignette: "presence",
-    spanClass: "desk:col-span-4",
+    spanClass: "tab:col-span-2 desk:col-span-4",
     surface: "bg-card-accent",
     minHeight: 520,
-    paddingClass: "presence-card px-7 pt-7",
+    paddingClass: "px-5 pt-5 pb-5 desk:px-7 desk:pt-7 desk:pb-0",
     descriptionClass: "text-secondary",
     textClass: "max-w-[460px]",
   },
@@ -69,7 +69,7 @@ const cards: Card[] = [
     spanClass: "desk:col-span-2",
     surface: "bg-card-tint",
     minHeight: 380,
-    paddingClass: "px-7 pt-7",
+    paddingClass: "px-5 pt-5 pb-5 desk:px-7 desk:pt-7 desk:pb-0",
     descriptionClass: "text-secondary",
     textClass: "",
   },
@@ -81,19 +81,19 @@ const cards: Card[] = [
     spanClass: "desk:col-span-2",
     surface: "bg-card-tint",
     minHeight: 520,
-    paddingClass: "px-7 pt-7",
+    paddingClass: "px-5 pt-5 pb-5 desk:px-7 desk:pt-7 desk:pb-0",
     descriptionClass: "text-secondary",
     textClass: "",
   },
   {
-    title: "A person at the hard parts",
+    title: "A professional at the hard parts",
     description:
-      "When a step needs judgement or a phone call, someone who's run a business picks it up with you.",
+      "When a step needs judgement or a phone call, someone who's already done this picks it up with you.",
     vignette: "person",
     spanClass: "desk:col-span-2",
     surface: "bg-[linear-gradient(160deg,#1C1C1E_0%,#0E0E10_100%)] text-white",
     minHeight: 380,
-    paddingClass: "p-7",
+    paddingClass: "p-5 desk:p-7",
     descriptionClass: "text-[#A1A1A6]",
     textClass: "",
   },
@@ -104,8 +104,8 @@ export function Bento() {
     <section id="why">
       <div className="mx-auto flex max-w-[1200px] flex-col gap-10 px-6 pt-16 pb-12 desk:px-8 desk:pt-24">
         <h2 className="m-0 max-w-[680px] text-[clamp(1.75rem,3vw,2.125rem)] leading-[1.15] font-medium tracking-[-0.03em]">
-          Everything it takes to start a business,
-          <br />
+          Everything it takes to start a business,{" "}
+          <br className="hidden desk:block" />
           <span className="text-muted">in one simple flow.</span>
         </h2>
         <BentoMotion>

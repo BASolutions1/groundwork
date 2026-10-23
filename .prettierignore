@@ -2,4 +2,3 @@
 node_modules
 pnpm-lock.yaml
 reference
-components/bento/globe-dots.ts

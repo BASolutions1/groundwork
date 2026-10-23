@@ -14,7 +14,7 @@ export function Hero() {
 
   return (
     <section id="top">
-      <div className="mx-auto grid w-full max-w-[1200px] items-center gap-10 px-6 py-12 desk:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] desk:gap-12 desk:px-8 desk:py-20">
+      <div className="mx-auto grid w-full max-w-[1200px] items-center gap-8 px-6 py-10 tab:gap-10 tab:py-12 desk:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] desk:gap-12 desk:px-8 desk:py-20">
         <div className="flex min-w-0 flex-col gap-[26px]">
           <h1 className="hero-title m-0 text-[clamp(2rem,7.2vw,3.875rem)] leading-[1.02] font-medium tracking-[-0.035em]">
             Start your business.
@@ -24,8 +24,8 @@ export function Hero() {
             what&apos;s next.
           </h1>
           <p className="m-0 max-w-[420px] text-[17px] leading-[1.55] text-secondary">
-            Every step to get a new business running in Canada, in the right order, with
-            someone who&apos;s already done it.
+            Every step to get a new business running, in the right order, with someone
+            who&apos;s already done it.
           </p>
           <form onSubmit={onSubmit} className="mt-1.5 flex max-w-[480px] flex-col gap-2.5">
             <label htmlFor="hero-business" className="text-sm font-medium">

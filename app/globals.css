@@ -14,6 +14,7 @@
   --radius-card: 12px;
   --radius-control: 4px;
   --radius-pill: 999px;
+  --breakpoint-tab: 700px;
   --breakpoint-desk: 900px;
   --background-image-card-tint: linear-gradient(160deg, #f4f6f2, #eaf0eb);
   --background-image-card-accent: linear-gradient(160deg, #eef4ef, #dcebe1);

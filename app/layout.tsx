@@ -20,7 +20,7 @@ const jetbrains = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Groundwork",
   description:
-    "Every step to get a new business running in Canada, in the right order, with someone who's already done it.",
+    "Every step to get a new business running, in the right order, with someone who's already done it. Based in Canada, used worldwide.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

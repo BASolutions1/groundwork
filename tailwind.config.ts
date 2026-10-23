@@ -32,6 +32,7 @@ const config: Config = {
         ],
       },
       screens: {
+        tab: "700px",
         desk: "900px",
       },
     },

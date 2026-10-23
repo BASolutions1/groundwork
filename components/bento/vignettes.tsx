@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { GlobeField } from "./GlobeField";
 
 export type VignetteName =
   | "register"
@@ -44,7 +43,7 @@ function WithUs() {
 
 function RegisterVignette() {
   return (
-    <div className="absolute -right-10 bottom-[-20px] left-[60px] overflow-hidden rounded-card border border-[#E3E6E1] bg-white shadow-[0_30px_60px_-30px_rgba(17,17,17,0.35)]">
+    <div className="relative mt-4 overflow-hidden rounded-card border border-[#E3E6E1] bg-white shadow-[0_24px_50px_-28px_rgba(17,17,17,0.35)] desk:absolute desk:-right-10 desk:bottom-[-20px] desk:left-[60px] desk:mt-0 desk:shadow-[0_30px_60px_-30px_rgba(17,17,17,0.35)]">
       <div className="relative flex h-[26px] items-center justify-center border-b border-[#ECEEEA] bg-[#F7F8F6]">
         <span className="absolute left-3 flex gap-[5px]">
           <span className="size-[7px] rounded-full bg-[#DADAD7]" />
@@ -53,7 +52,7 @@ function RegisterVignette() {
         </span>
         <span className="h-3 w-[180px] rounded-[6px] bg-[#ECEEEA]" />
       </div>
-      <div className="grid grid-cols-[1.2fr_1fr] gap-3.5 px-[18px] pt-4 pb-6">
+      <div className="grid grid-cols-1 gap-3.5 px-3.5 pt-3 pb-4 tab:grid-cols-[1.2fr_1fr] desk:px-[18px] desk:pt-4 desk:pb-6">
         <div className="flex flex-col gap-2">
           <div className="flex items-baseline justify-between">
             <span className="text-xs font-semibold">Registration</span>
@@ -82,7 +81,7 @@ function RegisterVignette() {
             <WithUs />
           </div>
         </div>
-        <div className="flex flex-col gap-2.5">
+        <div className="hidden flex-col gap-2.5 tab:flex">
           <div className="flex flex-col gap-1 rounded-lg border border-[#ECEEEA] px-3 py-2.5">
             <span className="mono text-[9px]">Days to operating</span>
             <span className="text-[22px] font-semibold tracking-[-0.02em]">
@@ -163,7 +162,7 @@ function MoneyVignette() {
     [".96s", "100%", "#0E3D22"],
   ] as const;
   return (
-    <div className="absolute -right-2 bottom-[-14px] left-7 flex flex-col gap-3 rounded-card border border-[#E3E6E1] bg-white px-[18px] py-4 shadow-[0_24px_50px_-28px_rgba(17,17,17,0.35)]">
+    <div className="relative mt-4 flex flex-col gap-3 rounded-card border border-[#E3E6E1] bg-white px-3.5 py-3.5 shadow-[0_24px_50px_-28px_rgba(17,17,17,0.35)] desk:absolute desk:-right-2 desk:bottom-[-14px] desk:left-7 desk:mt-0 desk:px-[18px] desk:py-4">
       <div className="flex flex-col gap-0.5">
         <span className="mono text-[9px]">Set aside for GST and tax</span>
         <span className="text-[26px] font-semibold tracking-[-0.03em]">
@@ -208,56 +207,56 @@ function MoneyLine({ label, status }: { label: string; status: string }) {
 
 function PaidVignette() {
   return (
-    <div className="absolute right-5 bottom-0 left-5 h-[230px]">
-      <div
-        className="inv absolute bottom-[30px] left-0 flex w-[64%] flex-col gap-2 rounded-lg border border-[#E3E6E1] bg-white p-3.5 shadow-[0_10px_24px_-14px_rgba(0,0,0,0.3)]"
-      >
-        <div className="flex justify-between">
-          <span className="mono text-[8px]">Invoice 0001</span>
-          <span className="mono text-[8px]">Due 14 days</span>
-        </div>
-        <div className="h-1 w-[60%] rounded-[2px] bg-[#DADAD7]" />
-        <div className="h-1 w-[75%] rounded-[2px] bg-[#ECECEA]" />
-        <div className="h-1 w-[45%] rounded-[2px] bg-[#ECECEA]" />
-        <div className="h-1 w-[70%] rounded-[2px] bg-[#ECECEA]" />
-        <div className="flex justify-between border-t border-[#ECECEA] pt-2">
-          <span className="mono text-[8px]">Total</span>
-          <span className="text-xs font-semibold">$ ––––</span>
-        </div>
-      </div>
-      <div className="pay absolute -right-2.5 -bottom-2 flex w-[70%] flex-col gap-[9px] rounded-card border border-[#E3E6E1] bg-[linear-gradient(160deg,#FFFFFF_0%,#F3F7F4_100%)] p-3.5 shadow-[0_20px_40px_-18px_rgba(17,17,17,0.4)]">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold">Pay invoice</span>
-          <span className="text-xs font-semibold">$ ––––</span>
-        </div>
-        <div className="relative h-[54px] overflow-hidden rounded-lg bg-[linear-gradient(135deg,#0E3D22_0%,#1F8A4C_60%,#6FBF8C_100%)]">
-          <span className="absolute top-3 left-3 h-[13px] w-[18px] rounded-[3px] bg-white/85" />
-          <span className="mono mono-literal absolute bottom-2.5 left-3 text-[9px] tracking-[0.18em] text-white/90">
-            •••• •••• 4417
-          </span>
-          <span className="absolute top-3 right-3 text-xs text-white/90">)))</span>
-        </div>
-        <div className="relative h-8">
-          <div className="paybtn absolute inset-0 flex items-center justify-center rounded-[7px] bg-ink text-[11px] font-semibold text-white">
-            Pay now
+    <div className="relative z-0 -mx-1 mt-2 flex min-h-[230px] flex-1 items-center">
+      <div className="relative h-[230px] w-full">
+        <div className="inv absolute bottom-[30px] left-0 flex w-[64%] flex-col gap-2 rounded-lg border border-[#E3E6E1] bg-white p-3.5 shadow-[0_10px_24px_-14px_rgba(0,0,0,0.3)]">
+          <div className="flex justify-between">
+            <span className="mono text-[8px]">Invoice 0001</span>
+            <span className="mono text-[8px]">Due 14 days</span>
           </div>
-          <div className="paid absolute inset-0 flex items-center justify-center gap-1.5 rounded-[7px] bg-[#E7F2EA] text-[11px] font-semibold text-ink">
-            <span className="inline-flex size-3.5 items-center justify-center rounded-full bg-done">
-              <svg
-                width="9"
-                height="9"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#fff"
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M20 6 9 17l-5-5" />
-              </svg>
+          <div className="h-1 w-[60%] rounded-[2px] bg-[#DADAD7]" />
+          <div className="h-1 w-[75%] rounded-[2px] bg-[#ECECEA]" />
+          <div className="h-1 w-[45%] rounded-[2px] bg-[#ECECEA]" />
+          <div className="h-1 w-[70%] rounded-[2px] bg-[#ECECEA]" />
+          <div className="flex justify-between border-t border-[#ECECEA] pt-2">
+            <span className="mono text-[8px]">Total</span>
+            <span className="text-xs font-semibold">$ ––––</span>
+          </div>
+        </div>
+        <div className="pay absolute -right-2.5 -bottom-2 flex w-[70%] flex-col gap-[9px] rounded-card border border-[#E3E6E1] bg-[linear-gradient(160deg,#FFFFFF_0%,#F3F7F4_100%)] p-3.5 shadow-[0_20px_40px_-18px_rgba(17,17,17,0.4)]">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold">Pay invoice</span>
+            <span className="text-xs font-semibold">$ ––––</span>
+          </div>
+          <div className="relative h-[54px] overflow-hidden rounded-lg bg-[linear-gradient(135deg,#0E3D22_0%,#1F8A4C_60%,#6FBF8C_100%)]">
+            <span className="absolute top-3 left-3 h-[13px] w-[18px] rounded-[3px] bg-white/85" />
+            <span className="mono mono-literal absolute bottom-2.5 left-3 text-[9px] tracking-[0.18em] text-white/90">
+              •••• •••• 4417
             </span>
-            Paid
+            <span className="absolute top-3 right-3 text-xs text-white/90">)))</span>
+          </div>
+          <div className="relative h-8">
+            <div className="paybtn absolute inset-0 flex items-center justify-center rounded-[7px] bg-ink text-[11px] font-semibold text-white">
+              Pay now
+            </div>
+            <div className="paid absolute inset-0 flex items-center justify-center gap-1.5 rounded-[7px] bg-[#E7F2EA] text-[11px] font-semibold text-ink">
+              <span className="inline-flex size-3.5 items-center justify-center rounded-full bg-done">
+                <svg
+                  width="9"
+                  height="9"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#fff"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+              </span>
+              Paid
+            </div>
           </div>
         </div>
       </div>
@@ -267,7 +266,7 @@ function PaidVignette() {
 
 function PresenceVignette() {
   return (
-    <div className="absolute right-3 bottom-2 left-4 grid grid-cols-1 items-start gap-3.5 desk:right-0 desk:left-7 desk:grid-cols-[1.1fr_1fr]">
+    <div className="relative mt-4 grid min-h-0 flex-1 grid-cols-1 items-stretch gap-3 desk:absolute desk:right-0 desk:bottom-2 desk:left-7 desk:mt-0 desk:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
       <div className="flex flex-col gap-3 rounded-[14px] border border-[#D6E7DB] bg-white p-4 shadow-[0_30px_60px_-30px_rgba(17,17,17,0.4)]">
         <div className="flex gap-2">
           <span className="rounded-pill bg-ink px-[9px] py-1 text-[10px] font-semibold text-white">
@@ -294,8 +293,11 @@ function PresenceVignette() {
             <circle cx="11" cy="11" r="7" />
             <path d="m20 20-3.5-3.5" />
           </svg>
-          <span className="type border-r-[1.5px] border-ink pr-0.5 text-xs whitespace-nowrap">
-            best bakery near me
+          <span className="type text-xs">
+            <span className="type-reveal">
+              <span className="type-inner">best salon near me</span>
+            </span>
+            <span className="type-caret" aria-hidden="true" />
           </span>
         </div>
         <div className="ans flex items-start gap-1.5">
@@ -319,16 +321,16 @@ function PresenceVignette() {
           <PackRow
             letter="A"
             name="Your Business Name"
-            detail="Bakery · Open · 2.1 km"
+            detail="Salon · Open · 2.1 km"
             rating="5.0"
             primary
           />
-          <PackRow letter="B" hint="Bakery" />
-          <PackRow letter="C" hint="Cafe" />
+          <PackRow letter="B" hint="Salon" />
+          <PackRow letter="C" hint="Spa" />
         </div>
       </div>
-      <div className="hidden flex-col gap-3 pt-[30px] desk:flex">
-        <div className="flex flex-col gap-2.5 rounded-card bg-ink px-4 py-3.5 text-white shadow-[0_20px_40px_-20px_rgba(17,17,17,0.5)]">
+      <div className="hidden min-h-0 flex-col gap-3 desk:flex">
+        <div className="flex min-h-0 flex-1 flex-col justify-center gap-2.5 rounded-card bg-ink px-4 py-3.5 text-white shadow-[0_20px_40px_-20px_rgba(17,17,17,0.5)]">
           <div className="flex items-baseline justify-between">
             <span className="mono text-[8px]">Local ranking</span>
             <span className="mono text-[8px]">90 days</span>
@@ -359,13 +361,13 @@ function PresenceVignette() {
             <span className="mono text-[8px] text-[#6FBF8C]">was page 3</span>
           </div>
         </div>
-        <div className="overflow-hidden rounded-card border border-[#D6E7DB] bg-white shadow-[0_16px_30px_-20px_rgba(17,17,17,0.35)]">
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-card border border-[#D6E7DB] bg-white shadow-[0_16px_30px_-20px_rgba(17,17,17,0.35)]">
           <div className="flex items-center gap-2 border-b border-[#ECEEEA] px-3.5 py-2.5">
             <span className="pulse size-2 rounded-full bg-done" />
             <span className="text-[11px] font-semibold text-ink">Listing live</span>
             <span className="mono ml-auto text-[8px]">Open now</span>
           </div>
-          <div className="relative h-24 overflow-hidden bg-[radial-gradient(120%_80%_at_70%_20%,#F3F7F4_0%,#E6EEE8_100%)]">
+          <div className="relative min-h-24 flex-1 overflow-hidden bg-[radial-gradient(120%_80%_at_70%_20%,#F3F7F4_0%,#E6EEE8_100%)]">
             <div className="absolute top-[35%] -left-[10%] h-2 w-[120%] -rotate-12 bg-white" />
             <div className="absolute -top-[10%] left-[45%] h-[120%] w-2 rotate-[20deg] bg-white" />
             <div className="absolute top-1/2 left-1/2 size-[70px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(31,138,76,0.3)_0%,rgba(31,138,76,0)_70%)]" />
@@ -446,15 +448,108 @@ function PackRow({
 
 function ToolsVignette() {
   return (
-    <div className="absolute -right-2.5 -bottom-[70px] -left-2.5">
-      <GlobeField />
+    <div className="relative z-0 mt-3 flex min-h-[220px] flex-1 items-center tab:min-h-[240px]">
+      <div className="flex w-full flex-col">
+        <div className="mb-2 flex items-baseline justify-between gap-2 px-0.5">
+          <span className="text-[11px] font-semibold">Kitchen reno</span>
+          <span className="mono text-[8px]">one job, four tools</span>
+        </div>
+        <ToolStep tool="CRM" mark="start" title="the Millers" detail="new lead">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#ECECEA] text-[10px] font-semibold">
+            M
+          </span>
+        </ToolStep>
+        <ToolJoin />
+        <ToolStep tool="Estimate" title="$ —,—" detail="3 items · sent">
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-[5px] bg-[#F4F4F2] text-[13px] font-semibold">
+            $
+          </span>
+        </ToolStep>
+        <ToolJoin />
+        <ToolStep tool="Schedule" title="9:00–1:00" detail="on site">
+          <span className="flex size-8 shrink-0 flex-col items-center justify-center rounded-[5px] bg-[#E7F2EA]">
+            <span className="mono text-[7px] leading-none text-done">Thu</span>
+            <span className="text-[11px] leading-none font-semibold">9</span>
+          </span>
+        </ToolStep>
+        <ToolJoin />
+        <ToolStep
+          tool="Invoice"
+          mark="finish"
+          title="Invoice 0001"
+          detail="$ —,—"
+        />
+      </div>
+    </div>
+  );
+}
+
+function ToolStep({
+  tool,
+  title,
+  detail,
+  mark,
+  children,
+}: {
+  tool: string;
+  title: string;
+  detail: string;
+  mark?: "start" | "finish";
+  children?: ReactNode;
+}) {
+  const finish = mark === "finish";
+  return (
+    <div
+      className={`flex items-center gap-2.5 rounded-[10px] border bg-white px-2.5 py-2 shadow-[0_10px_20px_-16px_rgba(17,17,17,0.45)] ${
+        finish ? "border-ink" : "border-[#E3E6E1]"
+      }`}
+    >
+      {children}
+      <span className="min-w-0 flex-1">
+        <span className="mono block text-[8px] tracking-wide">{tool}</span>
+        <span className="block truncate text-[12px] font-semibold">{title}</span>
+        <span className="mono mono-literal block truncate text-[8px] text-secondary">
+          {detail}
+        </span>
+      </span>
+      {mark === "start" ? (
+        <span className="mono shrink-0 text-[8px] text-muted">start</span>
+      ) : null}
+      {finish ? (
+        <span className="inline-flex shrink-0 items-center gap-1 rounded-[4px] bg-[#E7F2EA] px-1.5 py-0.5 text-[10px] font-semibold text-ink">
+          <span className="inline-flex size-3 items-center justify-center rounded-full bg-done">
+            <svg
+              width="8"
+              height="8"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#fff"
+              strokeWidth="4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          </span>
+          Paid
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+function ToolJoin() {
+  return (
+    <div className="flex items-center justify-center py-[3px]" aria-hidden="true">
+      <span className="tool-join block h-3 w-px" />
     </div>
   );
 }
 
 function NetworkVignette() {
   return (
-    <div className="absolute right-0 bottom-[-16px] left-7 overflow-hidden rounded-card border border-[#E3E6E1] bg-white shadow-[0_24px_50px_-28px_rgba(17,17,17,0.35)]">
+    <div className="relative mt-4 overflow-hidden rounded-card border border-[#E3E6E1] bg-white shadow-[0_24px_50px_-28px_rgba(17,17,17,0.35)] desk:absolute desk:right-0 desk:bottom-[-16px] desk:left-7 desk:mt-0">
       <div className="flex items-center justify-between border-b border-[#ECEEEA] px-3.5 py-3">
         <span className="text-xs font-semibold">Your network</span>
         <span className="mono text-[9px]">
