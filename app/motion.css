@@ -1,0 +1,682 @@
+/* Motion ported from the homepage mockup.
+   Hero crossfades are scroll-driven in JS. In-card loops stay CSS. */
+
+.mono {
+  font-family: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a8a8e;
+}
+
+.mono-literal {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #e6e6e4;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 9px 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #e3e3e1;
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 11px;
+  color: #55555a;
+  background: #ffffff;
+}
+
+.shot-a {
+  opacity: 1;
+  transform: scale(1.04);
+  transform-origin: center;
+}
+
+.shot-b,
+.shot-c,
+.shot-ui {
+  opacity: 0;
+}
+
+.cap-2 {
+  opacity: 0;
+}
+
+.bcard {
+  animation: drift 7s ease-in-out infinite;
+  will-change: transform;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.bcard-2 {
+  animation-duration: 8.5s;
+  animation-delay: -2s;
+}
+
+.bcard-3 {
+  animation-duration: 6.2s;
+  animation-delay: -1s;
+}
+
+.bcard-4 {
+  animation-duration: 9s;
+  animation-delay: -4s;
+}
+
+.bcard-5 {
+  animation-duration: 7.6s;
+  animation-delay: -3s;
+}
+
+.bcard-6 {
+  animation-duration: 6.8s;
+  animation-delay: -5s;
+}
+
+.bcard-7 {
+  animation-duration: 8s;
+  animation-delay: -2.5s;
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.bcard:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 30px 60px -30px rgba(17, 17, 17, 0.35);
+  animation-play-state: paused;
+}
+
+.pbar {
+  animation: pbar 9s ease-in-out infinite;
+}
+
+@keyframes pbar {
+  0%,
+  10% {
+    width: 33%;
+  }
+  30%,
+  50% {
+    width: 50%;
+  }
+  70%,
+  90% {
+    width: 66%;
+  }
+  100% {
+    width: 33%;
+  }
+}
+
+.tick-next {
+  animation: ticknext 9s ease-in-out infinite;
+}
+
+@keyframes ticknext {
+  0%,
+  55% {
+    background: transparent;
+    border-color: #111;
+  }
+  68%,
+  90% {
+    background: #1f8a4c;
+    border-color: #1f8a4c;
+  }
+  100% {
+    background: transparent;
+    border-color: #111;
+  }
+}
+
+.bar {
+  transform-origin: bottom;
+  animation: bargrow 6s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+}
+
+@keyframes bargrow {
+  0% {
+    transform: scaleY(0.15);
+  }
+  25%,
+  80% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(0.15);
+  }
+}
+
+.globe {
+  animation: globe 60s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes globe {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.arc1 {
+  stroke-dasharray: 420;
+  animation: dash 8s ease-in-out infinite;
+}
+
+.arc2 {
+  stroke-dasharray: 380;
+  animation: dash 8s ease-in-out 2s infinite;
+}
+
+@keyframes dash {
+  0% {
+    stroke-dashoffset: 420;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  55% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  85% {
+    opacity: 0;
+    stroke-dashoffset: 0;
+  }
+  100% {
+    opacity: 0;
+    stroke-dashoffset: 420;
+  }
+}
+
+.pulse-svg {
+  animation: pulsesvg 2.4s ease-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes pulsesvg {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+.type {
+  display: inline-block;
+  width: 0;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: bottom;
+  animation: type 12s steps(19) infinite;
+}
+
+@keyframes type {
+  0%,
+  6% {
+    width: 0;
+  }
+  30%,
+  92% {
+    width: 19ch;
+  }
+  100% {
+    width: 19ch;
+  }
+}
+
+.ans {
+  opacity: 0;
+  animation: appear 12s ease-out infinite;
+  animation-fill-mode: backwards;
+}
+
+.res {
+  opacity: 0;
+  animation: appear 12s ease-out 0.6s infinite;
+  animation-fill-mode: backwards;
+}
+
+@keyframes appear {
+  0%,
+  32% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  40%,
+  92% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.rank {
+  stroke-dasharray: 260;
+  animation: rank 12s ease-in-out infinite;
+}
+
+.rank-fill {
+  opacity: 0;
+  animation: appear 12s ease-out 1s infinite;
+  animation-fill-mode: backwards;
+}
+
+@keyframes rank {
+  0%,
+  36% {
+    stroke-dashoffset: 260;
+  }
+  60%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.im1,
+.im2,
+.im3 {
+  opacity: 0;
+  animation-fill-mode: backwards;
+}
+
+.im1 {
+  animation: imsg 12s ease-out infinite;
+}
+
+.im2 {
+  animation: imsg 12s ease-out 2.4s infinite;
+}
+
+.im3 {
+  animation: imsg 12s ease-out 4.6s infinite;
+}
+
+@keyframes imsg {
+  0%,
+  6% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  12%,
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  96%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.st-b,
+.intro-count-b {
+  display: none;
+}
+
+.st-a,
+.intro-count-a {
+  animation: sta 12s linear infinite;
+}
+
+.st-b,
+.intro-count-b {
+  animation: stb 12s linear infinite;
+}
+
+@keyframes sta {
+  0%,
+  40% {
+    display: inline;
+  }
+  41%,
+  100% {
+    display: none;
+  }
+}
+
+@keyframes stb {
+  0%,
+  40% {
+    display: none;
+  }
+  41%,
+  100% {
+    display: inline;
+  }
+}
+
+.pay {
+  animation: payfloat 7s ease-in-out infinite;
+}
+
+@keyframes payfloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.paybtn {
+  animation: paybtn 7s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes paybtn {
+  0%,
+  38% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(0.96);
+  }
+  48%,
+  92% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.paid {
+  opacity: 0;
+  animation: paid 7s cubic-bezier(0.3, 1.3, 0.4, 1) infinite;
+}
+
+@keyframes paid {
+  0%,
+  46% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  54%,
+  90% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.inv {
+  animation: inv 7s ease-in-out infinite;
+}
+
+@keyframes inv {
+  0% {
+    transform: rotate(-3deg) translateY(0);
+  }
+  50% {
+    transform: rotate(-2deg) translateY(2px);
+  }
+  100% {
+    transform: rotate(-3deg) translateY(0);
+  }
+}
+
+.pin {
+  animation: pin 2.6s ease-in-out infinite;
+  transform-origin: bottom;
+}
+
+@keyframes pin {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -5px;
+  }
+}
+
+.pulse {
+  animation: pulse 2s ease-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(31, 138, 76, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 8px rgba(31, 138, 76, 0);
+  }
+}
+
+.msg1,
+.msg2,
+.dots {
+  animation-fill-mode: backwards;
+}
+
+.msg1 {
+  opacity: 0;
+  animation: msg 10s ease-in-out infinite;
+}
+
+.dots {
+  opacity: 0;
+  animation: dots 10s ease-in-out infinite;
+}
+
+.msg2 {
+  opacity: 0;
+  animation: msg2 10s ease-in-out infinite;
+}
+
+@keyframes msg {
+  0%,
+  5% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  12%,
+  88% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  95%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes dots {
+  0%,
+  20% {
+    opacity: 0;
+  }
+  26%,
+  44% {
+    opacity: 1;
+  }
+  48%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes msg2 {
+  0%,
+  48% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  56%,
+  88% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  95%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #8a8a8e;
+  animation: blink 1.2s ease-in-out infinite;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 899px) {
+  .presence-card {
+    min-height: 610px !important;
+  }
+}
+
+@media (max-height: 820px) and (min-width: 900px) {
+  .hero-title {
+    font-size: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bcard,
+  .pbar,
+  .tick-next,
+  .bar,
+  .globe,
+  .arc1,
+  .arc2,
+  .pulse-svg,
+  .type,
+  .ans,
+  .res,
+  .rank,
+  .rank-fill,
+  .im1,
+  .im2,
+  .im3,
+  .st-a,
+  .st-b,
+  .intro-count-a,
+  .intro-count-b,
+  .pay,
+  .paybtn,
+  .paid,
+  .inv,
+  .pin,
+  .pulse,
+  .msg1,
+  .dots,
+  .msg2,
+  .dot {
+    animation: none !important;
+  }
+
+  .bcard:hover {
+    transform: none;
+  }
+
+  .type {
+    width: auto;
+    border-right-color: transparent;
+  }
+
+  .ans,
+  .res,
+  .rank-fill,
+  .im1,
+  .im2,
+  .im3,
+  .msg1,
+  .msg2,
+  .paid {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .paybtn,
+  .dots,
+  .st-a,
+  .intro-count-a,
+  .shot-a,
+  .shot-b,
+  .cap-1 {
+    opacity: 0 !important;
+  }
+
+  .st-b,
+  .intro-count-b {
+    display: inline !important;
+  }
+
+  .shot-c,
+  .shot-ui,
+  .cap-2 {
+    opacity: 1 !important;
+  }
+
+  .shot-a,
+  .shot-ui {
+    transform: none !important;
+  }
+
+  .arc1,
+  .arc2 {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  .rank {
+    stroke-dashoffset: 0;
+  }
+}
