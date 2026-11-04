@@ -90,7 +90,8 @@ export function StagePage({ stage }: { stage: StageContent }) {
             Do not treat it as a side-column image.
           */}
           <section className="relative">
-            <div className="relative mx-auto max-w-[1400px]">
+            <div className="relative w-full">
+              {/* Full-bleed: match image aspect so object-contain fills edge-to-edge (no side gutters). */}
               <div className="relative hidden aspect-[16/9] w-full min-[1024px]:block">
                 <Image
                   src={heroImage}
@@ -98,11 +99,11 @@ export function StagePage({ stage }: { stage: StageContent }) {
                   fill
                   priority
                   quality={90}
-                  sizes="1400px"
-                  className="object-contain object-center"
+                  sizes="100vw"
+                  className="object-cover object-right"
                 />
               </div>
-              <div className="relative z-[2] mx-auto flex max-w-[1200px] flex-col px-6 pt-28 pb-10 min-[1024px]:absolute min-[1024px]:inset-0 min-[1024px]:mx-auto min-[1024px]:justify-center min-[1024px]:px-8 min-[1024px]:pt-24 min-[1024px]:pb-12">
+              <div className="relative z-[2] mx-auto flex max-w-[1200px] flex-col px-6 pt-28 pb-10 min-[1024px]:absolute min-[1024px]:inset-0 min-[1024px]:mx-auto min-[1024px]:w-full min-[1024px]:justify-center min-[1024px]:px-8 min-[1024px]:pt-24 min-[1024px]:pb-12">
                 <div className="flex max-w-[500px] flex-col gap-5">
                   <StageBreadcrumb title={stage.shortTitle} />
                   <StageHeroCopy stage={stage} />
