@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 import "./motion.css";
 
@@ -18,9 +19,21 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Groundwork",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
   description:
     "Every step to get a new business running, in the right order, with someone who's already done it. Based in Canada, used worldwide.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    siteName: SITE_NAME,
+    locale: "en_CA",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

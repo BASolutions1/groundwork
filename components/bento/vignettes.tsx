@@ -9,7 +9,11 @@ export type VignetteName =
   | "network"
   | "person";
 
-const vignettes: Record<VignetteName, () => ReactNode> = {
+export type VignetteMode = "bento" | "stage";
+
+type VignetteProps = { mode?: VignetteMode };
+
+const vignettes: Record<VignetteName, (props: VignetteProps) => ReactNode> = {
   register: RegisterVignette,
   money: MoneyVignette,
   paid: PaidVignette,
@@ -19,9 +23,13 @@ const vignettes: Record<VignetteName, () => ReactNode> = {
   person: PersonVignette,
 };
 
-export function vignetteFor(name: VignetteName) {
+export function vignetteFor(name: VignetteName, mode: VignetteMode = "bento") {
   const View = vignettes[name];
-  return <View />;
+  return <View mode={mode} />;
+}
+
+function shellClass(mode: VignetteMode, bento: string, stage: string) {
+  return mode === "stage" ? stage : bento;
 }
 
 function Dot({ done = false, next = false }: { done?: boolean; next?: boolean }) {
@@ -41,9 +49,15 @@ function WithUs() {
   );
 }
 
-function RegisterVignette() {
+function RegisterVignette({ mode = "bento" }: VignetteProps) {
   return (
-    <div className="relative mt-4 overflow-hidden rounded-card border border-[#E3E6E1] bg-white shadow-[0_24px_50px_-28px_rgba(17,17,17,0.35)] desk:absolute desk:-right-10 desk:bottom-[-20px] desk:left-[60px] desk:mt-0 desk:shadow-[0_30px_60px_-30px_rgba(17,17,17,0.35)]">
+    <div
+      className={shellClass(
+        mode,
+        "relative mt-4 overflow-hidden rounded-card border border-[#E3E6E1] bg-white shadow-[0_24px_50px_-28px_rgba(17,17,17,0.35)] desk:absolute desk:-right-10 desk:bottom-[-20px] desk:left-[60px] desk:mt-0 desk:shadow-[0_30px_60px_-30px_rgba(17,17,17,0.35)]",
+        "relative w-full overflow-hidden rounded-card border border-[#E3E6E1] bg-white shadow-[0_28px_56px_-28px_rgba(17,17,17,0.32)] desk:min-h-[320px]",
+      )}
+    >
       <div className="relative flex h-[26px] items-center justify-center border-b border-[#ECEEEA] bg-[#F7F8F6]">
         <span className="absolute left-3 flex gap-[5px]">
           <span className="size-[7px] rounded-full bg-[#DADAD7]" />
@@ -82,12 +96,21 @@ function RegisterVignette() {
           </div>
         </div>
         <div className="hidden flex-col gap-2.5 tab:flex">
-          <div className="flex flex-col gap-1 rounded-lg border border-[#ECEEEA] px-3 py-2.5">
-            <span className="mono text-[9px]">Days to operating</span>
-            <span className="text-[22px] font-semibold tracking-[-0.02em]">
-              12 <span className="text-[11px] font-semibold text-done">on track</span>
-            </span>
-          </div>
+          {mode === "stage" ? (
+            <div className="flex flex-col gap-1 rounded-lg border border-[#ECEEEA] px-3 py-2.5">
+              <span className="mono text-[9px]">Next up</span>
+              <span className="text-[15px] font-semibold tracking-[-0.02em]">
+                WCB registration
+              </span>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-1 rounded-lg border border-[#ECEEEA] px-3 py-2.5">
+              <span className="mono text-[9px]">Days to operating</span>
+              <span className="text-[22px] font-semibold tracking-[-0.02em]">
+                12 <span className="text-[11px] font-semibold text-done">on track</span>
+              </span>
+            </div>
+          )}
           <div className="flex flex-col gap-1.5 rounded-lg border border-[#ECEEEA] px-3 py-2.5">
             <span className="mono text-[9px]">This week</span>
             <WeekBars />
@@ -149,7 +172,7 @@ function WeekBars() {
   );
 }
 
-function MoneyVignette() {
+function MoneyVignette({ mode = "bento" }: VignetteProps) {
   const bars = [
     ["0s", "30%", "#DCEBE1"],
     [".12s", "45%", "#DCEBE1"],
@@ -162,7 +185,13 @@ function MoneyVignette() {
     [".96s", "100%", "#0E3D22"],
   ] as const;
   return (
-    <div className="relative mt-4 flex flex-col gap-3 rounded-card border border-[#E3E6E1] bg-white px-3.5 py-3.5 shadow-[0_24px_50px_-28px_rgba(17,17,17,0.35)] desk:absolute desk:-right-2 desk:bottom-[-14px] desk:left-7 desk:mt-0 desk:px-[18px] desk:py-4">
+    <div
+      className={shellClass(
+        mode,
+        "relative mt-4 flex flex-col gap-3 rounded-card border border-[#E3E6E1] bg-white px-3.5 py-3.5 shadow-[0_24px_50px_-28px_rgba(17,17,17,0.35)] desk:absolute desk:-right-2 desk:bottom-[-14px] desk:left-7 desk:mt-0 desk:px-[18px] desk:py-4",
+        "relative flex w-full flex-col gap-3 rounded-card border border-[#E3E6E1] bg-white px-4 py-4 shadow-[0_28px_56px_-28px_rgba(17,17,17,0.32)] desk:px-5 desk:py-5",
+      )}
+    >
       <div className="flex flex-col gap-0.5">
         <span className="mono text-[9px]">Set aside for GST and tax</span>
         <span className="text-[26px] font-semibold tracking-[-0.03em]">
@@ -205,9 +234,15 @@ function MoneyLine({ label, status }: { label: string; status: string }) {
   );
 }
 
-function PaidVignette() {
+function PaidVignette({ mode = "bento" }: VignetteProps) {
   return (
-    <div className="relative z-0 -mx-1 mt-2 flex min-h-[230px] flex-1 items-center">
+    <div
+      className={shellClass(
+        mode,
+        "relative z-0 -mx-1 mt-2 flex min-h-[230px] flex-1 items-center",
+        "relative z-0 flex min-h-[260px] w-full items-center",
+      )}
+    >
       <div className="relative h-[230px] w-full">
         <div className="inv absolute bottom-[30px] left-0 flex w-[64%] flex-col gap-2 rounded-lg border border-[#E3E6E1] bg-white p-3.5 shadow-[0_10px_24px_-14px_rgba(0,0,0,0.3)]">
           <div className="flex justify-between">
@@ -264,9 +299,15 @@ function PaidVignette() {
   );
 }
 
-function PresenceVignette() {
+function PresenceVignette({ mode = "bento" }: VignetteProps) {
   return (
-    <div className="relative mt-4 grid min-h-0 flex-1 grid-cols-1 items-stretch gap-3 desk:absolute desk:right-0 desk:bottom-2 desk:left-7 desk:mt-0 desk:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
+    <div
+      className={shellClass(
+        mode,
+        "relative mt-4 grid min-h-0 flex-1 grid-cols-1 items-stretch gap-3 desk:absolute desk:right-0 desk:bottom-2 desk:left-7 desk:mt-0 desk:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]",
+        "relative grid w-full grid-cols-1 items-stretch gap-3 desk:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]",
+      )}
+    >
       <div className="flex flex-col gap-3 rounded-[14px] border border-[#D6E7DB] bg-white p-4 shadow-[0_30px_60px_-30px_rgba(17,17,17,0.4)]">
         <div className="flex gap-2">
           <span className="rounded-pill bg-ink px-[9px] py-1 text-[10px] font-semibold text-white">
@@ -446,9 +487,15 @@ function PackRow({
   );
 }
 
-function ToolsVignette() {
+function ToolsVignette({ mode = "bento" }: VignetteProps) {
   return (
-    <div className="relative z-0 mt-3 flex min-h-[220px] flex-1 items-center tab:min-h-[240px]">
+    <div
+      className={shellClass(
+        mode,
+        "relative z-0 mt-3 flex min-h-[220px] flex-1 items-center tab:min-h-[240px]",
+        "relative z-0 flex min-h-[260px] w-full items-center",
+      )}
+    >
       <div className="flex w-full flex-col">
         <div className="mb-2 flex items-baseline justify-between gap-2 px-0.5">
           <span className="text-[11px] font-semibold">Kitchen reno</span>
@@ -547,9 +594,15 @@ function ToolJoin() {
   );
 }
 
-function NetworkVignette() {
+function NetworkVignette({ mode = "bento" }: VignetteProps) {
   return (
-    <div className="relative mt-4 overflow-hidden rounded-card border border-[#E3E6E1] bg-white shadow-[0_24px_50px_-28px_rgba(17,17,17,0.35)] desk:absolute desk:right-0 desk:bottom-[-16px] desk:left-7 desk:mt-0">
+    <div
+      className={shellClass(
+        mode,
+        "relative mt-4 overflow-hidden rounded-card border border-[#E3E6E1] bg-white shadow-[0_24px_50px_-28px_rgba(17,17,17,0.35)] desk:absolute desk:right-0 desk:bottom-[-16px] desk:left-7 desk:mt-0",
+        "relative w-full overflow-hidden rounded-card border border-[#E3E6E1] bg-white shadow-[0_28px_56px_-28px_rgba(17,17,17,0.32)]",
+      )}
+    >
       <div className="flex items-center justify-between border-b border-[#ECEEEA] px-3.5 py-3">
         <span className="text-xs font-semibold">Your network</span>
         <span className="mono text-[9px]">
@@ -664,11 +717,23 @@ function Bubble({
   );
 }
 
-function PersonVignette() {
+function PersonVignette({ mode = "bento" }: VignetteProps) {
   return (
     <>
-      <div className="pointer-events-none absolute -top-[60px] -right-[60px] size-[220px] rounded-full bg-[radial-gradient(circle,rgba(31,138,76,0.45)_0%,rgba(31,138,76,0)_70%)]" />
-      <div className="relative z-[1] mt-auto flex flex-col gap-2">
+      <div
+        className={shellClass(
+          mode,
+          "pointer-events-none absolute -top-[60px] -right-[60px] size-[220px] rounded-full bg-[radial-gradient(circle,rgba(31,138,76,0.45)_0%,rgba(31,138,76,0)_70%)]",
+          "pointer-events-none absolute -top-[40px] -right-[40px] size-[180px] rounded-full bg-[radial-gradient(circle,rgba(31,138,76,0.45)_0%,rgba(31,138,76,0)_70%)]",
+        )}
+      />
+      <div
+        className={shellClass(
+          mode,
+          "relative z-[1] mt-auto flex flex-col gap-2",
+          "relative z-[1] flex flex-col gap-2 rounded-card bg-[linear-gradient(160deg,#1C1C1E_0%,#0E0E10_100%)] p-5 text-white",
+        )}
+      >
         <div className="mb-1 flex items-center gap-2">
           <span className="size-[26px] rounded-full bg-[linear-gradient(135deg,#9FD9B5,#1F8A4C)]" />
           <span className="flex flex-col">

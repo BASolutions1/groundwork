@@ -11,6 +11,7 @@ type Card = {
   paddingClass: string;
   descriptionClass: string;
   textClass: string;
+  href?: string;
 };
 
 const cards: Card[] = [
@@ -25,6 +26,7 @@ const cards: Card[] = [
     paddingClass: "px-5 pt-5 pb-5 desk:px-7 desk:pt-7 desk:pb-0",
     descriptionClass: "text-secondary",
     textClass: "max-w-[420px]",
+    href: "/start/register-a-business",
   },
   {
     title: "Money, set up right",
@@ -109,8 +111,8 @@ export function Bento() {
           <span className="text-muted">in one simple flow.</span>
         </h2>
         <BentoMotion>
-          {cards.map((card, index) => (
-            <article key={card.title} className={`bento-reveal ${card.spanClass}`}>
+          {cards.map((card, index) => {
+            const body = (
               <div
                 className={`bcard bcard-${index + 1} relative flex h-full flex-col gap-2.5 overflow-hidden rounded-card ${card.surface} ${card.paddingClass}`}
                 style={{ minHeight: card.minHeight }}
@@ -125,8 +127,19 @@ export function Bento() {
                 </div>
                 {vignetteFor(card.vignette)}
               </div>
-            </article>
-          ))}
+            );
+            return (
+              <article key={card.title} className={`bento-reveal ${card.spanClass}`}>
+                {card.href ? (
+                  <a href={card.href} className="block h-full text-inherit no-underline">
+                    {body}
+                  </a>
+                ) : (
+                  body
+                )}
+              </article>
+            );
+          })}
         </BentoMotion>
       </div>
     </section>
