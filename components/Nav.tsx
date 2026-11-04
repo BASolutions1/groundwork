@@ -1,3 +1,5 @@
+import { BrandLogo } from "@/components/BrandLogo";
+
 const links = [
   { href: "#why", label: "Why Groundwork" },
   { href: "#how", label: "How it works" },
@@ -7,15 +9,9 @@ const links = [
 export function Nav() {
   return (
     <header className="pointer-events-none absolute inset-x-0 top-0 z-30">
-      <div className="pointer-events-auto mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-6 py-[22px] desk:px-8">
+      <div className="pointer-events-auto mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-6 py-[18px] desk:px-8">
         <div className="flex min-w-0 items-center gap-11">
-          <a
-            href="#top"
-            className="flex items-center gap-2 text-[19px] font-semibold tracking-[-0.02em] text-ink"
-          >
-            <span className="inline-block size-[14px] rounded-[3px] bg-ink" />
-            Groundwork
-          </a>
+          <BrandLogo href="#top" priority iconClassName="h-8 w-auto" />
           <nav className="hidden items-center gap-[26px] desk:flex" aria-label="Page">
             {links.map((link) => (
               <a

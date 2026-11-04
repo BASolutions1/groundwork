@@ -112,11 +112,11 @@ export function AuthForm({
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex gap-2 border-b border-line">
+      <div className="flex justify-center gap-5 border-b border-line">
         <button
           type="button"
           onClick={() => setTab("password")}
-          className={`cursor-pointer border-b-2 px-1 pb-2 text-sm font-medium ${
+          className={`cursor-pointer border-b-2 px-1 pb-2.5 text-sm font-medium ${
             tab === "password"
               ? "border-ink text-ink"
               : "border-transparent text-muted"
@@ -127,7 +127,7 @@ export function AuthForm({
         <button
           type="button"
           onClick={() => setTab("magic")}
-          className={`cursor-pointer border-b-2 px-1 pb-2 text-sm font-medium ${
+          className={`cursor-pointer border-b-2 px-1 pb-2.5 text-sm font-medium ${
             tab === "magic" ? "border-ink text-ink" : "border-transparent text-muted"
           }`}
         >

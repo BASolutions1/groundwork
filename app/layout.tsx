@@ -29,10 +29,18 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  icons: {
+    icon: [
+      { url: "/brand/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/brand/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/brand/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
   openGraph: {
     siteName: SITE_NAME,
     locale: "en_CA",
     type: "website",
+    images: [{ url: "/brand/logo-app-favicon.png", width: 116, height: 113, alt: SITE_NAME }],
   },
 };
 

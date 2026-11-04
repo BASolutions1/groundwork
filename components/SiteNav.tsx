@@ -1,3 +1,5 @@
+import { BrandLogo } from "@/components/BrandLogo";
+
 type Props = {
   /** Transparent absolute nav for the homepage hero. Default is solid in-flow. */
   overlay?: boolean;
@@ -19,18 +21,12 @@ export function SiteNav({ overlay = false }: Props) {
       }
     >
       <div
-        className={`mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-6 py-[22px] desk:px-8 ${
+        className={`mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-6 py-[18px] desk:px-8 ${
           overlay ? "pointer-events-auto" : ""
         }`}
       >
         <div className="flex min-w-0 items-center gap-11">
-          <a
-            href="/"
-            className="flex items-center gap-2 text-[19px] font-semibold tracking-[-0.02em] text-ink"
-          >
-            <span className="inline-block size-[14px] rounded-[3px] bg-ink" />
-            Groundwork
-          </a>
+          <BrandLogo href="/" iconClassName="h-8 w-auto" />
           <nav className="hidden items-center gap-[26px] desk:flex" aria-label="Site">
             {links.map((link) => (
               <a

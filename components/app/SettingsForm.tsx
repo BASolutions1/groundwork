@@ -30,7 +30,7 @@ export function SettingsForm({ profile, email }: Props) {
   }
 
   return (
-    <div className="mx-auto flex max-w-[520px] flex-col gap-6">
+    <div className="flex max-w-[520px] flex-col gap-6">
       <div>
         <h1 className="m-0 text-[clamp(1.6rem,3vw,2rem)] font-medium tracking-[-0.03em]">
           Settings

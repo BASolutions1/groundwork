@@ -8,16 +8,17 @@ const GREEN = "#1F8A4C";
 const GREEN_LEFT = "#176B3B";
 const GREEN_RIGHT = "#0E3D22";
 const EDGE = "#DADAD7";
-const DOT = "#ECECE9";
 
-const BW = 120;
-const BV = 60;
-const BH = 40;
-const SW = 156;
-const SV = 78;
-const SH = 26;
-const CX = 320;
-const BASE_T = 310;
+/** True 2:1 isometric. */
+const BW = 118;
+const BV = 59;
+const BH = 38;
+const SW = 152;
+const SV = 76;
+const SH = 24;
+const CX = 280;
+const BASE_T = 286;
+const STAGE_COUNT = 7;
 
 function pt(x: number, y: number) {
   return `${x.toFixed(1)},${y.toFixed(1)}`;
@@ -42,6 +43,13 @@ function blockT(i: number) {
 function slabT() {
   return BASE_T + BH - SH + 6;
 }
+
+const contentTop = blockT(STAGE_COUNT - 1) - 18;
+const contentBottom = slabT() + 2 * SV + SH + 28;
+const contentLeft = CX - SW - 36;
+const contentRight = CX + BW + 36;
+const VIEW_W = contentRight - contentLeft;
+const VIEW_H = contentBottom - contentTop;
 
 type Props = {
   stages: StageProgress[];
@@ -86,7 +94,7 @@ export function DashboardStack({
       if (cancelled || !rootRef.current) return;
       const blocks = gsap.utils.toArray<SVGGElement>(".dash-block", root);
       const ctx = gsap.context(() => {
-        gsap.set(blocks, { y: (i: number) => -40 - i * 18, opacity: 0 });
+        gsap.set(blocks, { y: (i: number) => -36 - i * 14, opacity: 0 });
         gsap.to(blocks, {
           y: 0,
           opacity: 1,
@@ -110,42 +118,43 @@ export function DashboardStack({
   if (!mounted) {
     return (
       <div
-        className={`relative w-full ${className}`}
-        style={{ aspectRatio: "640 / 380" }}
+        className={`relative mx-auto w-full max-w-[520px] ${className}`}
+        style={{ aspectRatio: `${VIEW_W} / ${VIEW_H}` }}
         aria-hidden
       />
     );
   }
 
   return (
-    <div ref={rootRef} className={`relative w-full ${className}`}>
+    <div
+      ref={rootRef}
+      className={`relative mx-auto w-full max-w-[520px] ${className}`}
+    >
       <svg
-        viewBox="0 40 640 420"
+        viewBox={`${contentLeft} ${contentTop} ${VIEW_W} ${VIEW_H}`}
         className="block h-auto w-full overflow-visible"
         role="img"
         aria-label="Groundwork progress stack across seven stages"
       >
         <defs>
-          <pattern
-            id={`dash-dots-${uid}`}
-            width="14"
-            height="14"
-            patternUnits="userSpaceOnUse"
+          <filter
+            id={`dash-shadow-${uid}`}
+            x="-40%"
+            y="-40%"
+            width="180%"
+            height="200%"
           >
-            <circle cx="1.5" cy="1.5" r="1.1" fill={DOT} />
-          </pattern>
+            <feGaussianBlur in="SourceGraphic" stdDeviation="8" />
+          </filter>
         </defs>
 
-        <rect x="40" y="60" width="560" height="360" rx="18" fill={`url(#dash-dots-${uid})`} />
-        <rect
-          x="40"
-          y="60"
-          width="560"
-          height="360"
-          rx="18"
-          fill="none"
-          stroke={EDGE}
-          strokeWidth="1"
+        <ellipse
+          cx={CX}
+          cy={slabT() + 2 * SV + SH + 10}
+          rx={200}
+          ry={28}
+          fill="rgba(17,17,17,0.07)"
+          filter={`url(#dash-shadow-${uid})`}
         />
 
         <g className="dash-slab">
@@ -153,13 +162,17 @@ export function DashboardStack({
           <path d={rightFace(CX, slabT(), SW, SV, SH)} fill={GREEN_RIGHT} />
           <path d={topFace(CX, slabT(), SW, SV)} fill={GREEN} />
           <text
-            x={CX}
-            y={slabT() + SV + SH * 0.72}
             textAnchor="middle"
-            fill="#FFFFFF"
-            fontSize="11"
-            fontWeight="600"
-            letterSpacing="0.18em"
+            dominantBaseline="middle"
+            fill="rgba(255,255,255,0.95)"
+            transform={`translate(${CX + SW / 2}, ${slabT() + 1.5 * SV + SH / 2}) skewY(-26.57)`}
+            style={{
+              fontFamily:
+                "var(--font-jetbrains), 'JetBrains Mono', ui-monospace, Menlo, monospace",
+              fontSize: "10px",
+              fontWeight: 500,
+              letterSpacing: "0.28em",
+            }}
           >
             GROUNDWORK
           </text>
@@ -171,7 +184,9 @@ export function DashboardStack({
           const isHot = highlightStage === stage.stage;
           const stroke =
             isNext ? "#111111" : isHot ? GREEN : stage.fill === "empty" ? EDGE : GREEN;
-          const strokeWidth = isNext || isHot ? 2.25 : 1.25;
+          const strokeWidth = isNext || isHot ? 2.1 : 1.15;
+          const faceCx = CX + BW / 2;
+          const faceCy = t + 1.5 * BV + BH / 2;
 
           const fillTop =
             stage.fill === "complete"
@@ -191,6 +206,8 @@ export function DashboardStack({
               : stage.fill === "partial"
                 ? "#5BB884"
                 : "#EFEFEE";
+          const labelFill =
+            stage.fill === "complete" ? "#FFFFFF" : isNext || isHot ? "#111111" : "#55555A";
 
           return (
             <g
@@ -219,15 +236,32 @@ export function DashboardStack({
                 stroke={stroke}
                 strokeWidth={strokeWidth}
               />
-              <text
-                x={CX + BW * 0.35}
-                y={t + BV * 1.15}
-                fill="#111111"
-                fontSize="10"
-                fontWeight="600"
-              >
-                {`${String(stage.stage).padStart(2, "0")} ${stage.short}`}
-              </text>
+              <g transform={`translate(${faceCx}, ${faceCy}) skewY(-26.57)`}>
+                <text
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fill={labelFill}
+                  style={{
+                    fontFamily: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
+                    fontSize: "11px",
+                    fontWeight: 600,
+                    letterSpacing: "-0.015em",
+                  }}
+                >
+                  <tspan
+                    style={{
+                      fontFamily:
+                        "var(--font-jetbrains), 'JetBrains Mono', ui-monospace, Menlo, monospace",
+                      fontSize: "9px",
+                      fontWeight: 500,
+                      letterSpacing: "0.06em",
+                    }}
+                  >
+                    {String(stage.stage).padStart(2, "0")}{" "}
+                  </tspan>
+                  {stage.short}
+                </text>
+              </g>
             </g>
           );
         })}
