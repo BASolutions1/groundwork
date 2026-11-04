@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+
 import { publishBusinessPrefill, readBusinessPrefill } from "@/lib/prefill";
+import { buildSignupHref } from "@/lib/onboarding";
 
 type Props = {
   idPrefix?: string;
@@ -17,15 +20,35 @@ export function BusinessQuestionForm({
   className = "",
   stacked = false,
 }: Props) {
+  const router = useRouter();
   const [business, setBusiness] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setBusiness(readBusinessPrefill());
   }, []);
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    publishBusinessPrefill(business);
+    const businessType = business.trim();
+    if (!businessType || loading) return;
+
+    publishBusinessPrefill(businessType);
+    setLoading(true);
+    try {
+      await fetch("/api/onboarding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          businessType,
+          phone: "",
+          source: "show-my-list",
+        }),
+      });
+      router.push(buildSignupHref({ businessType, phone: "" }));
+    } catch {
+      setLoading(false);
+    }
   }
 
   const inputId = `${idPrefix}-business`;
@@ -46,6 +69,7 @@ export function BusinessQuestionForm({
           id={inputId}
           name="business"
           type="text"
+          required
           value={business}
           onChange={(event) => setBusiness(event.target.value)}
           placeholder="Cafe, consulting, retail..."
@@ -53,9 +77,10 @@ export function BusinessQuestionForm({
         />
         <button
           type="submit"
-          className="box-border h-12 min-h-12 shrink-0 cursor-pointer rounded-control bg-ink px-5 text-[15px] font-medium leading-none whitespace-nowrap text-white hover:bg-[#2a2a2a]"
+          disabled={loading}
+          className="box-border h-12 min-h-12 shrink-0 cursor-pointer rounded-control bg-ink px-5 text-[15px] font-medium leading-none whitespace-nowrap text-white hover:bg-[#2a2a2a] disabled:opacity-60"
         >
-          {buttonLabel}
+          {loading ? "Starting…" : buttonLabel}
         </button>
       </div>
     </form>

@@ -2,12 +2,11 @@ import { Footer } from "@/components/Footer";
 import { GroundworkStack } from "@/components/GroundworkStack";
 import { SiteNav } from "@/components/SiteNav";
 import { StartForm } from "@/components/StartForm";
-import { STAGE_INDEX, STAGE_PAGES, stagePath, stepLabel } from "@/lib/stages/content";
+import { vignetteFor } from "@/components/bento/vignettes";
+import { HOME_FLOW_CARDS } from "@/lib/home-flow";
 import { startIndexBreadcrumbJsonLd } from "@/lib/stages/seo";
 
 export function StartIndexPage() {
-  const published = new Set(STAGE_PAGES.map((stage) => stage.slug));
-
   return (
     <>
       <SiteNav />
@@ -39,42 +38,42 @@ export function StartIndexPage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-[900px] px-6 py-14 desk:px-8 desk:py-20">
-          <ol className="m-0 grid list-none gap-4 p-0 tab:grid-cols-2">
-            {STAGE_INDEX.map((stage) => {
-              const live = published.has(stage.slug);
-              const inner = (
-                <>
-                  <span className="mono text-[11px] tracking-[0.12em] text-muted">
-                    {stepLabel(stage.step)}
-                  </span>
-                  <span className="mt-2 text-[18px] font-semibold tracking-[-0.02em] text-ink">
-                    {stage.shortTitle}
-                  </span>
-                  <span className="mt-1.5 text-[14px] leading-[1.5] text-secondary">
-                    {stage.cardDescription}
-                  </span>
-                </>
+        <section className="mx-auto max-w-[1200px] px-6 py-14 desk:px-8 desk:py-20">
+          <div className="grid grid-cols-1 gap-3 tab:grid-cols-2 desk:grid-cols-6 desk:gap-4">
+            {HOME_FLOW_CARDS.map((card, index) => {
+              const body = (
+                <div
+                  className={`relative flex h-full flex-col gap-2.5 overflow-hidden rounded-card ${card.surface} ${card.paddingClass}`}
+                  style={{ minHeight: Math.min(card.minHeight, 360) }}
+                >
+                  <div className={`relative z-10 flex flex-col gap-1.5 ${card.textClass}`}>
+                    <p className="mono m-0 text-[10px] tracking-[0.12em] text-muted">
+                      {String(index + 1).padStart(2, "0")} / 07
+                    </p>
+                    <h2 className="m-0 text-[19px] font-semibold tracking-[-0.015em]">
+                      {card.title}
+                    </h2>
+                    <p className={`m-0 text-[13px] leading-normal ${card.descriptionClass}`}>
+                      {card.description}
+                    </p>
+                  </div>
+                  {vignetteFor(card.vignette)}
+                </div>
               );
 
               return (
-                <li key={stage.slug}>
-                  {live ? (
-                    <a
-                      href={stagePath(stage.slug)}
-                      className="flex h-full flex-col rounded-card border border-line bg-[linear-gradient(160deg,#f4f6f2,#eaf0eb)] px-5 py-5 transition-colors hover:border-[#C9D6CC]"
-                    >
-                      {inner}
+                <article key={card.title} className={card.spanClass}>
+                  {card.href ? (
+                    <a href={card.href} className="block h-full text-inherit no-underline">
+                      {body}
                     </a>
                   ) : (
-                    <div className="flex h-full flex-col rounded-card border border-line bg-white px-5 py-5 opacity-70">
-                      {inner}
-                    </div>
+                    body
                   )}
-                </li>
+                </article>
               );
             })}
-          </ol>
+          </div>
         </section>
 
         <StartForm />

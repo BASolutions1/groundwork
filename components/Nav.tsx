@@ -31,7 +31,7 @@ export function Nav() {
         <div className="flex items-center gap-[22px]">
           <a
             id="signin"
-            href="#signin"
+            href="/login"
             className="hidden text-[13px] font-medium text-secondary hover:text-[#444444] sm:inline"
           >
             Sign in
@@ -57,7 +57,7 @@ export function Nav() {
             {link.label}
           </a>
         ))}
-        <a href="#signin" className="shrink-0 text-[13px] font-medium text-secondary sm:hidden">
+        <a href="/login" className="shrink-0 text-[13px] font-medium text-secondary sm:hidden">
           Sign in
         </a>
       </nav>

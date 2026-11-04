@@ -1,11 +1,16 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+
 import { BUSINESS_PREFILL_EVENT, readBusinessPrefill } from "@/lib/prefill";
+import { buildSignupHref } from "@/lib/onboarding";
 
 export function StartForm() {
+  const router = useRouter();
   const [business, setBusiness] = useState("");
   const [phone, setPhone] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
 
   useEffect(() => {
     const apply = () => setBusiness(readBusinessPrefill());
@@ -21,8 +26,30 @@ export function StartForm() {
     };
   }, []);
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (status === "loading") return;
+
+    const businessType = business.trim();
+    const phoneValue = phone.trim();
+    if (!businessType || !phoneValue) return;
+
+    setStatus("loading");
+    try {
+      const response = await fetch("/api/onboarding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          businessType,
+          phone: phoneValue,
+          source: "homepage",
+        }),
+      });
+      if (!response.ok) throw new Error("request failed");
+      router.push(buildSignupHref({ businessType, phone: phoneValue }));
+    } catch {
+      setStatus("error");
+    }
   }
 
   return (
@@ -32,13 +59,14 @@ export function StartForm() {
           Start your list.
         </h2>
         <p className="m-0 text-base leading-normal text-secondary">
-          Two questions. We&apos;ll build your list and call to walk you through it. The
-          first conversation is free.
+          Two questions. We build your list and call to walk you through it. The first
+          conversation is free.
         </p>
         <form onSubmit={onSubmit} className="mt-1.5 flex w-full flex-col gap-2">
           <input
             name="business"
             type="text"
+            required
             value={business}
             onChange={(event) => setBusiness(event.target.value)}
             placeholder="What kind of business?"
@@ -47,6 +75,7 @@ export function StartForm() {
           <input
             name="phone"
             type="tel"
+            required
             inputMode="tel"
             autoComplete="tel"
             value={phone}
@@ -56,10 +85,16 @@ export function StartForm() {
           />
           <button
             type="submit"
-            className="h-12 cursor-pointer rounded-control bg-ink text-[15px] font-medium text-white hover:bg-[#2a2a2a]"
+            disabled={status === "loading"}
+            className="h-12 cursor-pointer rounded-control bg-ink text-[15px] font-medium text-white hover:bg-[#2a2a2a] disabled:opacity-60"
           >
-            Build my list →
+            {status === "loading" ? "Starting…" : "Build my list →"}
           </button>
+          {status === "error" ? (
+            <p className="m-0 text-xs text-red-700">
+              Something went wrong. Try again in a moment.
+            </p>
+          ) : null}
         </form>
         <p className="m-0 text-xs text-muted">We only use this to call you back.</p>
       </div>

@@ -74,7 +74,7 @@ export function startIndexMetadata(): Metadata {
   const url = `${SITE_URL}/start`;
   const fullTitle = `Start your business, step by step | ${SITE_NAME}`;
   const description =
-    "Seven stages to get a new Canadian business running: register, tax, banking, insurance, getting paid, tools and getting found.";
+    "Everything it takes to start a business in one flow: register, money, getting paid, online presence, tools, who to call, and a professional on the hard parts.";
   return {
     title: {
       absolute: fullTitle,
