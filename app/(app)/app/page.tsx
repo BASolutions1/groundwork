@@ -1,5 +1,5 @@
 import { OverviewClient } from "@/components/app/OverviewClient";
-import { normalizeUserSteps } from "@/lib/app-data";
+import { daysSince, normalizeUserSteps } from "@/lib/app-data";
 import { requireUser } from "@/lib/auth";
 import type { PlaybookStep, Profile, UserStep } from "@/lib/database.types";
 
@@ -28,10 +28,10 @@ export default async function AppOverviewPage() {
 
   return (
     <OverviewClient
-      profile={profile as Profile}
       steps={steps}
       professionals={professionals ?? []}
       introductions={introductions ?? []}
+      daysSinceStarted={daysSince((profile as Profile).created_at)}
     />
   );
 }

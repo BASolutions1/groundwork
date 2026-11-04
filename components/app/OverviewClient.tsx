@@ -6,25 +6,24 @@ import { useMemo, useState } from "react";
 import { DashboardStack } from "@/components/app/DashboardStack";
 import { StageBlockIcon } from "@/components/app/StageBlockIcon";
 import {
-  daysSince,
   professionalsForStage,
   stageProgress,
   type UserStepRow,
 } from "@/lib/app-data";
-import type { Introduction, Professional, Profile } from "@/lib/database.types";
+import type { Introduction, Professional } from "@/lib/database.types";
 
 type Props = {
-  profile: Profile;
   steps: UserStepRow[];
   professionals: Professional[];
   introductions: Introduction[];
+  daysSinceStarted: number;
 };
 
 export function OverviewClient({
-  profile,
   steps,
   professionals,
   introductions,
+  daysSinceStarted,
 }: Props) {
   const [hoverStage, setHoverStage] = useState<number | null>(null);
   const stages = useMemo(() => stageProgress(steps), [steps]);
@@ -186,7 +185,7 @@ export function OverviewClient({
         <section className="rounded-card border border-line p-5">
           <p className="mono m-0 text-[10px] tracking-[0.12em] text-muted">DAYS SINCE YOU STARTED</p>
           <p className="mt-2 m-0 text-[22px] font-semibold tracking-[-0.02em]">
-            {daysSince(profile.created_at)}
+            {daysSinceStarted}
           </p>
         </section>
       </aside>

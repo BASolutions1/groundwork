@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 import type { StageProgress } from "@/lib/app-data";
 
@@ -64,8 +64,14 @@ export function DashboardStack({
   const rootRef = useRef<HTMLDivElement>(null);
   const played = useRef(false);
   const uid = useId().replace(/:/g, "");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
     const root = rootRef.current;
     if (!root) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -80,7 +86,7 @@ export function DashboardStack({
       if (cancelled || !rootRef.current) return;
       const blocks = gsap.utils.toArray<SVGGElement>(".dash-block", root);
       const ctx = gsap.context(() => {
-        gsap.set(blocks, { y: (i) => -40 - i * 18, opacity: 0 });
+        gsap.set(blocks, { y: (i: number) => -40 - i * 18, opacity: 0 });
         gsap.to(blocks, {
           y: 0,
           opacity: 1,
@@ -96,9 +102,20 @@ export function DashboardStack({
       cancelled = true;
       revert?.();
     };
-  }, [settleOnce]);
+  }, [mounted, settleOnce]);
 
   const ordered = [...stages].sort((a, b) => a.stage - b.stage);
+
+  // SVG interactive attrs hydrate inconsistently across browsers; render after mount.
+  if (!mounted) {
+    return (
+      <div
+        className={`relative w-full ${className}`}
+        style={{ aspectRatio: "640 / 380" }}
+        aria-hidden
+      />
+    );
+  }
 
   return (
     <div ref={rootRef} className={`relative w-full ${className}`}>
@@ -131,7 +148,6 @@ export function DashboardStack({
           strokeWidth="1"
         />
 
-        {/* Slab */}
         <g className="dash-slab">
           <path d={leftFace(CX, slabT(), SW, SV, SH)} fill={GREEN_LEFT} />
           <path d={rightFace(CX, slabT(), SW, SV, SH)} fill={GREEN_RIGHT} />
@@ -179,23 +195,30 @@ export function DashboardStack({
           return (
             <g
               key={stage.stage}
-              className="dash-block cursor-pointer"
-              role="button"
-              tabIndex={0}
-              aria-label={`${stage.short}: ${stage.done} of ${stage.total} done`}
+              className="dash-block"
+              style={{ cursor: "pointer" }}
               onMouseEnter={() => onHoverStage?.(stage.stage)}
               onMouseLeave={() => onHoverStage?.(null)}
               onClick={() => onSelectStage?.(stage.stage)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                  event.preventDefault();
-                  onSelectStage?.(stage.stage);
-                }
-              }}
             >
-              <path d={leftFace(CX, t, BW, BV, BH)} fill={fillLeft} stroke={stroke} strokeWidth={strokeWidth} />
-              <path d={rightFace(CX, t, BW, BV, BH)} fill={fillRight} stroke={stroke} strokeWidth={strokeWidth} />
-              <path d={topFace(CX, t, BW, BV)} fill={fillTop} stroke={stroke} strokeWidth={strokeWidth} />
+              <path
+                d={leftFace(CX, t, BW, BV, BH)}
+                fill={fillLeft}
+                stroke={stroke}
+                strokeWidth={strokeWidth}
+              />
+              <path
+                d={rightFace(CX, t, BW, BV, BH)}
+                fill={fillRight}
+                stroke={stroke}
+                strokeWidth={strokeWidth}
+              />
+              <path
+                d={topFace(CX, t, BW, BV)}
+                fill={fillTop}
+                stroke={stroke}
+                strokeWidth={strokeWidth}
+              />
               <text
                 x={CX + BW * 0.35}
                 y={t + BV * 1.15}
