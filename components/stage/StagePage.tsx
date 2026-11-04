@@ -65,28 +65,48 @@ export function StagePage({ stage }: { stage: StageContent }) {
   return (
     <>
       {heroImage ? (
-        <div className="relative overflow-hidden bg-[#F2F2F0]">
+        <div className="relative overflow-hidden bg-[#F6F6FA]">
           <SiteNav overlay />
-          <section className="relative flex flex-col min-[1024px]:block min-[1024px]:min-h-[720px]">
-            <div className="relative z-0 order-2 aspect-[16/10] w-full min-[1024px]:absolute min-[1024px]:inset-0 min-[1024px]:aspect-auto">
-              <Image
-                src={heroImage}
-                alt=""
-                fill
-                priority
-                quality={90}
-                sizes="100vw"
-                className="object-cover object-[78%_center] min-[1024px]:object-right"
-              />
-              <div
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-white min-[1024px]:h-24"
-                aria-hidden
-              />
+          {/*
+            This asset is composed as a full-bleed hero: empty left for copy, stack on the right.
+            Do not treat it as a side-column image.
+          */}
+          <section className="relative">
+            <div className="relative mx-auto max-w-[1400px]">
+              <div className="relative hidden aspect-[16/9] w-full min-[1024px]:block">
+                <Image
+                  src={heroImage}
+                  alt=""
+                  fill
+                  priority
+                  quality={90}
+                  sizes="1400px"
+                  className="object-contain object-center"
+                />
+              </div>
+              <div className="relative z-[2] mx-auto flex max-w-[1200px] flex-col px-6 pt-28 pb-10 min-[1024px]:absolute min-[1024px]:inset-0 min-[1024px]:mx-auto min-[1024px]:justify-center min-[1024px]:px-8 min-[1024px]:pt-24 min-[1024px]:pb-12">
+                <div className="flex max-w-[500px] flex-col gap-5">
+                  <StageBreadcrumb title={stage.shortTitle} />
+                  <StageHeroCopy stage={stage} />
+                </div>
+              </div>
+              {/* Mobile: show stack under the copy */}
+              <div className="relative mx-auto mt-2 aspect-[16/9] w-full max-w-[640px] min-[1024px]:hidden">
+                <Image
+                  src={heroImage}
+                  alt=""
+                  fill
+                  priority
+                  quality={90}
+                  sizes="640px"
+                  className="object-contain object-center"
+                />
+              </div>
             </div>
-            <div className="relative z-[2] order-1 mx-auto flex w-full max-w-[1200px] flex-col justify-center gap-6 px-6 pt-[7.5rem] pb-10 min-[1024px]:min-h-[720px] min-[1024px]:px-8 min-[1024px]:pt-[6.5rem] min-[1024px]:pb-20">
-              <StageBreadcrumb title={stage.shortTitle} />
-              <StageHeroCopy stage={stage} />
-            </div>
+            <div
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-white"
+              aria-hidden
+            />
           </section>
         </div>
       ) : (
