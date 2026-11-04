@@ -28,14 +28,14 @@ export const STAGE_INDEX: {
   {
     slug: "wcb-and-insurance",
     step: 4,
-    shortTitle: "WCB and insurance",
-    cardDescription: "Coverage you may need before you take on jobs or hire.",
+    shortTitle: "Insurance and coverage",
+    cardDescription: "What coverage you may need before you open, hire or take clients.",
   },
   {
     slug: "estimates-invoices-and-getting-paid",
     step: 5,
-    shortTitle: "Estimates and getting paid",
-    cardDescription: "Write estimates, send invoices, get paid without chasing.",
+    shortTitle: "Quotes, invoices and getting paid",
+    cardDescription: "Send a clear quote, invoice properly, get paid without chasing.",
   },
   {
     slug: "tools-that-fit",

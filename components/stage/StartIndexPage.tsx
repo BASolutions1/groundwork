@@ -23,18 +23,18 @@ export function StartIndexPage() {
           <div className="mx-auto grid max-w-[1100px] items-center gap-10 px-6 pt-12 pb-14 desk:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)] desk:gap-12 desk:px-8 desk:pt-16 desk:pb-20">
             <div className="flex max-w-[520px] flex-col gap-5">
               <p className="mono m-0 text-[11px] tracking-[0.14em] text-muted">
-                SEVEN STAGES
+                FIVE STAGES
               </p>
               <h1 className="m-0 text-[clamp(1.85rem,4.5vw,2.75rem)] leading-[1.08] font-medium tracking-[-0.035em]">
                 Start your business, step by step
               </h1>
               <p className="m-0 text-[16px] leading-[1.55] text-secondary">
-                Every stage in order. A short page for each one. The dashboard and a real
-                person on the hard parts.
+                Register to grow, in order. Short pages underneath for the work inside
+                each stage. The dashboard and a real person on the hard parts.
               </p>
             </div>
             <div className="mx-auto w-full max-w-[480px] desk:max-w-none">
-              <GroundworkStack mode="page" />
+              <GroundworkStack mode="page" face="left" />
             </div>
           </div>
         </section>

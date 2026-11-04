@@ -34,10 +34,10 @@ export const STAGES: Stage[] = [
     number: "02",
     done: true,
     person: {
-      role: "Insurance broker",
+      role: "Bookkeeper",
       status: "this week",
       active: true,
-      icon: "insurance",
+      icon: "accountant",
     },
   },
   {
@@ -58,7 +58,7 @@ export const STAGES: Stage[] = [
     number: "04",
     done: false,
     person: {
-      role: "Web and marketing",
+      role: "Marketing",
       status: "on standby",
       active: false,
       icon: "web",
@@ -70,7 +70,7 @@ export const STAGES: Stage[] = [
     number: "05",
     done: false,
     person: {
-      role: "Lawyer",
+      role: "Advisor",
       status: "when needed",
       active: false,
       icon: "lawyer",

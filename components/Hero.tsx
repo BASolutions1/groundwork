@@ -177,7 +177,7 @@ export function Hero() {
               ))}
             </div>
             <p className="m-0 text-[13px] leading-snug text-secondary">
-              Your guide, accountant and broker, on standby
+              Your guide, accountant and specialists, on standby
             </p>
           </div>
         </div>

@@ -118,10 +118,13 @@ function IsoBlock({
   stage,
   indexFromBottom,
   current = false,
+  mirrorLabels = false,
 }: {
   stage: Stage;
   indexFromBottom: number;
   current?: boolean;
+  /** Un-mirror glyphs when the whole stack is flipped horizontally. */
+  mirrorLabels?: boolean;
 }) {
   const t = blockT(indexFromBottom);
   const done = stage.done;
@@ -131,6 +134,7 @@ function IsoBlock({
   const topD = topFace(CX, t, BW, BV);
   const faceCx = CX + BW / 2;
   const faceCy = t + 1.5 * BV + BH / 2;
+  const labelFlip = mirrorLabels ? " scale(-1,1)" : "";
 
   return (
     <g className="stack-block" data-index={indexFromBottom}>
@@ -176,7 +180,10 @@ function IsoBlock({
           strokeDasharray="26 74"
         />
       ) : null}
-      <g className="stack-block-label" transform={`translate(${faceCx}, ${faceCy}) skewY(-26.57)`}>
+      <g
+        className="stack-block-label"
+        transform={`translate(${faceCx}, ${faceCy}) skewY(-26.57)${labelFlip}`}
+      >
         <text
           x={0}
           y={-7}
@@ -266,12 +273,20 @@ function MobilePeople() {
 
 type GroundworkStackProps = {
   mode?: GroundworkStackMode;
+  /** Face labels toward the left (toward page copy) or right. */
+  face?: "left" | "right";
 };
 
-export function GroundworkStack({ mode = "page" }: GroundworkStackProps) {
+export function GroundworkStack({
+  mode = "page",
+  face = "right",
+}: GroundworkStackProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const filterId = useId().replace(/:/g, "");
   const screen = mode === "screen";
+  const faceLeft = face === "left";
+  const mirrorTransform = faceLeft ? "translate(760,0) scale(-1,1)" : undefined;
+  const labelFlip = faceLeft ? " scale(-1,1)" : "";
 
   useEffect(() => {
     const root = rootRef.current;
@@ -432,7 +447,7 @@ export function GroundworkStack({ mode = "page" }: GroundworkStackProps) {
             </filter>
           </defs>
           <DotGrid />
-          <g className="stack-assembled">
+          <g className="stack-assembled" transform={mirrorTransform}>
             <g className="stack-slab">
               <ellipse
                 className="stack-slab-shadow"
@@ -463,7 +478,7 @@ export function GroundworkStack({ mode = "page" }: GroundworkStackProps) {
                 textAnchor="middle"
                 dominantBaseline="middle"
                 fill="rgba(255,255,255,0.9)"
-                transform={`translate(${CX + SW / 2}, ${slabT() + 1.5 * SV + SH / 2}) skewY(-26.57)`}
+                transform={`translate(${CX + SW / 2}, ${slabT() + 1.5 * SV + SH / 2}) skewY(-26.57)${labelFlip}`}
                 style={{
                   fontFamily:
                     "var(--font-jetbrains), 'JetBrains Mono', ui-monospace, Menlo, monospace",
@@ -481,6 +496,7 @@ export function GroundworkStack({ mode = "page" }: GroundworkStackProps) {
                 stage={stage}
                 indexFromBottom={i}
                 current={i === CURRENT_INDEX}
+                mirrorLabels={faceLeft}
               />
             ))}
           </g>
