@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { ReactNode } from "react";
 import { vignetteFor } from "@/components/bento/vignettes";
 import { Footer } from "@/components/Footer";
 import { BusinessQuestionForm } from "@/components/forms/BusinessQuestionForm";
@@ -16,8 +17,25 @@ import {
   stackIndexForStep,
 } from "./StageProgressStack";
 
-const sectionGrid =
-  "grid gap-6 desk:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] desk:items-start desk:gap-14";
+function StageSectionHeading({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex shrink-0 items-center gap-4 desk:w-[min(100%,300px)]">
+      <span
+        className="hidden h-14 w-[2px] shrink-0 rounded-full bg-done desk:block"
+        aria-hidden="true"
+      />
+      <div>
+        <h2 className="m-0 text-[clamp(1.35rem,2.5vw,1.625rem)] font-medium tracking-[-0.025em]">
+          {children}
+        </h2>
+        <span
+          className="mt-4 block h-[2px] w-12 rounded-full bg-done desk:hidden"
+          aria-hidden="true"
+        />
+      </div>
+    </div>
+  );
+}
 
 function StageBreadcrumb({ title }: { title: string }) {
   return (
@@ -142,11 +160,9 @@ export function StagePage({ stage }: { stage: StageContent }) {
         />
 
         <section className="mx-auto max-w-[1200px] px-6 py-12 desk:px-8 desk:py-16">
-          <div className={`${sectionGrid} desk:items-center`}>
-            <h2 className="m-0 text-[clamp(1.35rem,2.5vw,1.625rem)] font-medium tracking-[-0.025em]">
-              {stage.headings.what}
-            </h2>
-            <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-8 desk:flex-row desk:items-center desk:gap-16">
+            <StageSectionHeading>{stage.headings.what}</StageSectionHeading>
+            <div className="flex min-w-0 flex-1 flex-col gap-4">
               {stage.whatThisStepIs.map((paragraph) => (
                 <p key={paragraph} className="m-0 text-[16px] leading-[1.65] text-secondary">
                   {paragraph}
@@ -220,11 +236,9 @@ export function StagePage({ stage }: { stage: StageContent }) {
         </section>
 
         <section className="bg-[linear-gradient(160deg,#f4f6f2,#eaf0eb)]">
-          <div className={`mx-auto max-w-[1200px] px-6 py-14 desk:px-8 desk:py-20 ${sectionGrid}`}>
-            <h2 className="m-0 text-[clamp(1.35rem,2.5vw,1.625rem)] font-medium tracking-[-0.025em]">
-              {stage.headings.how}
-            </h2>
-            <div className="grid gap-8 min-[900px]:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] min-[900px]:items-center">
+          <div className="mx-auto flex max-w-[1200px] flex-col gap-8 px-6 py-14 desk:flex-row desk:items-center desk:gap-16 desk:px-8 desk:py-20">
+            <StageSectionHeading>{stage.headings.how}</StageSectionHeading>
+            <div className="grid min-w-0 flex-1 gap-8 min-[900px]:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] min-[900px]:items-center">
               <div className="order-2 flex flex-col gap-5 min-[900px]:order-1">
                 <div>
                   <p className="mono m-0 text-[10px] tracking-[0.12em] text-muted">
