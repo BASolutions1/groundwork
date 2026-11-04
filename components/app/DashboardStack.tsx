@@ -203,7 +203,7 @@ export function DashboardStack({
                 fontSize="10"
                 fontWeight="600"
               >
-                {String(stage.stage).padStart(2, "0")} {stage.short}
+                {`${String(stage.stage).padStart(2, "0")} ${stage.short}`}
               </text>
             </g>
           );
