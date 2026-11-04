@@ -94,17 +94,17 @@ export function Hero() {
             priority
             quality={85}
             sizes="(max-width: 699px) 100vw, (max-width: 1023px) 100vw, 100vw"
-            className="hero-laptop-img object-cover object-[82%_42%] min-[700px]:object-[78%_48%] min-[1024px]:object-[72%_50%]"
+            className="hero-laptop-img object-cover object-[82%_42%] min-[700px]:object-[78%_46%] min-[1024px]:object-[72%_44%]"
           />
         </div>
       </div>
 
       <div
-        className="hero-fade-bottom pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-14 min-[700px]:h-[140px] min-[1024px]:h-[180px]"
+        className="hero-fade-bottom pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-20 min-[700px]:h-[220px] min-[1024px]:h-[280px]"
         aria-hidden="true"
       />
 
-      <div className="relative z-[2] order-1 mx-auto flex w-full max-w-[1240px] flex-1 flex-col justify-center px-6 pb-10 pt-[6.75rem] min-[700px]:min-h-[640px] min-[700px]:pt-[5.75rem] desk:px-8 desk:pb-16 min-[1024px]:min-h-[760px]">
+      <div className="relative z-[2] order-1 mx-auto flex w-full max-w-[1240px] flex-1 flex-col justify-center px-6 pb-10 pt-[6.75rem] min-[700px]:min-h-[780px] min-[700px]:pt-[5.75rem] min-[700px]:pb-28 desk:px-8 desk:pb-36 min-[1024px]:min-h-[920px]">
         <div className="flex max-w-[480px] min-w-0 flex-col gap-[22px] min-[700px]:gap-[26px]">
           <h1 className="hero-title m-0 text-[clamp(2rem,6.5vw,3.875rem)] leading-[1.02] font-medium tracking-[-0.035em] text-ink">
             Start your business.
