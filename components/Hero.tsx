@@ -11,9 +11,36 @@ import {
 import { publishBusinessPrefill } from "@/lib/prefill";
 
 const standby = [
-  { initial: "G", className: "bg-ink text-white" },
-  { initial: "A", className: "bg-done text-white" },
-  { initial: "B", className: "bg-[#55555A] text-white" },
+  {
+    id: "guide",
+    className: "bg-ink text-white",
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <circle cx="12" cy="8" r="3.5" />
+        <path d="M5 19c1.5-3 4-4.5 7-4.5S17.5 16 19 19" />
+      </svg>
+    ),
+  },
+  {
+    id: "accountant",
+    className: "bg-done text-white",
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="4" y="3" width="16" height="18" rx="2" />
+        <path d="M8 8h8M8 12h8M8 16h5" />
+      </svg>
+    ),
+  },
+  {
+    id: "broker",
+    className: "bg-[#55555A] text-white",
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M12 3 5 6v5c0 4.5 3 7.5 7 9 4-1.5 7-4.5 7-9V6l-7-3Z" />
+        <path d="m9 12 2 2 4-4" />
+      </svg>
+    ),
+  },
 ];
 
 export function Hero() {
@@ -106,7 +133,7 @@ export function Hero() {
       />
 
       <div className="relative z-[2] order-1 mx-auto flex w-full max-w-[1240px] flex-1 flex-col justify-center px-6 pb-10 pt-[6.75rem] min-[700px]:min-h-[860px] min-[700px]:pt-[5.75rem] min-[700px]:pb-36 desk:px-8 desk:pb-44 min-[1024px]:min-h-[1000px]">
-        <div className="flex max-w-[480px] min-w-0 flex-col gap-[22px] min-[700px]:gap-[26px]">
+        <div className="flex max-w-[480px] min-w-0 flex-col gap-[22px] min-[700px]:-translate-y-7 min-[700px]:gap-[26px]">
           <h1 className="hero-title m-0 text-[clamp(2rem,6.5vw,3.875rem)] leading-[1.02] font-medium tracking-[-0.035em] text-ink">
             Start your business.
             <br />
@@ -114,7 +141,7 @@ export function Hero() {
           </h1>
           <p className="m-0 text-[16px] leading-[1.55] text-secondary min-[700px]:text-[17px]">
             You can&apos;t build a house on sand. We lay the groundwork with you:
-            every step in order, and a real person on each one.
+            every step in order, a real person on each one.
           </p>
           <form onSubmit={onSubmit} className="mt-1 flex flex-col gap-2.5">
             <label htmlFor="hero-business" className="text-sm font-medium">
@@ -139,13 +166,13 @@ export function Hero() {
             </div>
           </form>
           <div className="flex items-center gap-3">
-            <div className="flex shrink-0 -space-x-2">
+            <div className="flex shrink-0 -space-x-2" aria-hidden="true">
               {standby.map((person) => (
                 <span
-                  key={person.initial}
-                  className={`relative flex size-8 items-center justify-center rounded-full border-2 border-white text-[11px] font-semibold ${person.className}`}
+                  key={person.id}
+                  className={`relative flex size-8 items-center justify-center rounded-full border-2 border-white ${person.className}`}
                 >
-                  {person.initial}
+                  {person.icon}
                 </span>
               ))}
             </div>
