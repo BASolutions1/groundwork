@@ -67,21 +67,23 @@ export function StagePage({ stage }: { stage: StageContent }) {
       {heroImage ? (
         <div className="relative overflow-hidden bg-[#F2F2F0]">
           <SiteNav overlay />
-          <section className="relative min-h-[640px] desk:min-h-[720px]">
-            <Image
-              src={heroImage}
-              alt=""
-              fill
-              priority
-              quality={90}
-              sizes="100vw"
-              className="object-cover object-[78%_center] tab:object-[72%_center] desk:object-right"
-            />
-            <div
-              className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-24 bg-gradient-to-b from-transparent to-white"
-              aria-hidden
-            />
-            <div className="relative z-[2] mx-auto flex max-w-[1200px] flex-col justify-center gap-6 px-6 pt-[7.5rem] pb-16 desk:min-h-[720px] desk:px-8 desk:pt-[6.5rem] desk:pb-20">
+          <section className="relative flex flex-col min-[1024px]:block min-[1024px]:min-h-[720px]">
+            <div className="relative z-0 order-2 aspect-[16/10] w-full min-[1024px]:absolute min-[1024px]:inset-0 min-[1024px]:aspect-auto">
+              <Image
+                src={heroImage}
+                alt=""
+                fill
+                priority
+                quality={90}
+                sizes="100vw"
+                className="object-cover object-[78%_center] min-[1024px]:object-right"
+              />
+              <div
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-white min-[1024px]:h-24"
+                aria-hidden
+              />
+            </div>
+            <div className="relative z-[2] order-1 mx-auto flex w-full max-w-[1200px] flex-col justify-center gap-6 px-6 pt-[7.5rem] pb-10 min-[1024px]:min-h-[720px] min-[1024px]:px-8 min-[1024px]:pt-[6.5rem] min-[1024px]:pb-20">
               <StageBreadcrumb title={stage.shortTitle} />
               <StageHeroCopy stage={stage} />
             </div>

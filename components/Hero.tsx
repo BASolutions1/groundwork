@@ -102,7 +102,7 @@ export function Hero() {
     <section
       id="top"
       ref={sectionRef}
-      className="hero relative flex flex-col overflow-hidden min-[700px]:block"
+      className="hero relative flex flex-col overflow-hidden min-[1024px]:block"
       style={
         {
           background: "#ffffff",
@@ -111,7 +111,7 @@ export function Hero() {
     >
       <div
         ref={stageRef}
-        className="hero-stage pointer-events-none relative z-0 order-2 aspect-[5/4] w-full min-[700px]:absolute min-[700px]:inset-0 min-[700px]:aspect-auto"
+        className="hero-stage pointer-events-none relative z-0 order-2 aspect-[5/4] w-full min-[700px]:aspect-[16/11] min-[1024px]:absolute min-[1024px]:inset-0 min-[1024px]:aspect-auto"
         style={{ background: "var(--hero-studio-mid)" }}
       >
         <div ref={imageWrapRef} className="hero-laptop-wrap absolute inset-0">
@@ -121,19 +121,19 @@ export function Hero() {
             fill
             priority
             quality={85}
-            sizes="(max-width: 699px) 100vw, (max-width: 1023px) 100vw, 100vw"
-            className="hero-laptop-img object-cover object-[82%_40%] min-[700px]:object-[78%_42%] min-[1024px]:object-[72%_40%]"
+            sizes="(max-width: 1023px) 100vw, 100vw"
+            className="hero-laptop-img object-cover object-[82%_40%] min-[700px]:object-[75%_42%] min-[1024px]:object-[72%_40%]"
           />
         </div>
       </div>
 
       <div
-        className="hero-fade-bottom pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-16 min-[700px]:h-[100px] min-[1024px]:h-[120px]"
+        className="hero-fade-bottom pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-16 min-[1024px]:h-[120px]"
         aria-hidden="true"
       />
 
-      <div className="relative z-[2] order-1 mx-auto flex w-full max-w-[1240px] flex-1 flex-col justify-center px-6 pb-10 pt-[6.75rem] min-[700px]:min-h-[860px] min-[700px]:pt-[5.75rem] min-[700px]:pb-36 desk:px-8 desk:pb-44 min-[1024px]:min-h-[1000px]">
-        <div className="flex max-w-[480px] min-w-0 flex-col gap-[22px] min-[700px]:-translate-y-7 min-[700px]:gap-[26px]">
+      <div className="relative z-[2] order-1 mx-auto flex w-full max-w-[1240px] flex-1 flex-col justify-center px-6 pb-10 pt-[6.75rem] desk:px-8 min-[1024px]:min-h-[1000px] min-[1024px]:pt-[5.75rem] min-[1024px]:pb-44">
+        <div className="flex max-w-[480px] min-w-0 flex-col gap-[22px] min-[1024px]:-translate-y-7 min-[1024px]:gap-[26px]">
           <h1 className="hero-title m-0 text-[clamp(2rem,6.5vw,3.875rem)] leading-[1.02] font-medium tracking-[-0.035em] text-ink">
             Start your business.
             <br />
