@@ -2,15 +2,27 @@ import { BentoMotion } from "./BentoMotion";
 import { vignetteFor } from "./bento/vignettes";
 import { HOME_FLOW_CARDS } from "@/lib/home-flow";
 
-export function Bento() {
+type Props = {
+  /** Homepage keeps the section headline; /start already has its own. */
+  showHeading?: boolean;
+  id?: string;
+};
+
+export function Bento({ showHeading = true, id = "why" }: Props) {
   return (
-    <section id="why">
-      <div className="mx-auto flex max-w-[1200px] flex-col gap-10 px-6 pt-16 pb-12 desk:px-8 desk:pt-24">
-        <h2 className="m-0 max-w-[680px] text-[clamp(1.75rem,3vw,2.125rem)] leading-[1.15] font-medium tracking-[-0.03em]">
-          Everything it takes to start a business,{" "}
-          <br className="hidden desk:block" />
-          <span className="text-muted">in one simple flow.</span>
-        </h2>
+    <section id={showHeading ? id : undefined}>
+      <div
+        className={`mx-auto flex max-w-[1200px] flex-col gap-10 px-6 desk:px-8 ${
+          showHeading ? "pt-16 pb-12 desk:pt-24" : "py-14 desk:py-20"
+        }`}
+      >
+        {showHeading ? (
+          <h2 className="m-0 max-w-[680px] text-[clamp(1.75rem,3vw,2.125rem)] leading-[1.15] font-medium tracking-[-0.03em]">
+            Everything it takes to start a business,{" "}
+            <br className="hidden desk:block" />
+            <span className="text-muted">in one simple flow.</span>
+          </h2>
+        ) : null}
         <BentoMotion>
           {HOME_FLOW_CARDS.map((card, index) => {
             const body = (

@@ -50,29 +50,26 @@ export function OverviewClient({
   }
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-7">
       <div>
         <h1 className="m-0 text-[clamp(1.6rem,3vw,2rem)] font-medium tracking-[-0.03em]">
           Overview
         </h1>
-        <p className="mt-2 m-0 max-w-[36rem] text-[15px] text-secondary">
-          Your stack shows progress by stage. Click a block to jump to that section.
+        <p className="mt-1.5 m-0 text-[15px] text-secondary">
+          Where you are on the list.
         </p>
       </div>
 
-      <div className="grid items-start gap-8 desk:grid-cols-[minmax(0,1.55fr)_minmax(280px,0.9fr)] desk:gap-10">
-        <div className="flex min-w-0 flex-col gap-8">
-          <section className="overflow-hidden rounded-card border border-line bg-[#FAFBFA]">
-            <div className="flex items-end justify-between gap-4 border-b border-line px-5 py-4">
-              <div>
-                <p className="mono m-0 text-[10px] tracking-[0.12em] text-muted">YOUR STACK</p>
-                <p className="mt-1 m-0 text-[13px] text-secondary">
-                  {doneCount} of {steps.length} steps done
-                </p>
-              </div>
-              <span className="mono text-[11px] text-muted">{progressPct}%</span>
+      <div className="grid items-start gap-7 desk:grid-cols-[minmax(0,1.5fr)_minmax(260px,0.85fr)] desk:gap-8">
+        <div className="flex min-w-0 flex-col gap-7">
+          <section className="rounded-card border border-line bg-[#FAFBFA]">
+            <div className="flex items-baseline justify-between gap-3 px-5 pt-4 pb-1">
+              <p className="mono m-0 text-[10px] tracking-[0.12em] text-muted">STACK</p>
+              <p className="m-0 text-[12px] text-muted">
+                {doneCount}/{steps.length} done · click a stage
+              </p>
             </div>
-            <div className="flex items-center justify-center px-4 py-6 desk:px-6 desk:py-8">
+            <div className="px-5 pb-5 pt-2 desk:px-8 desk:pb-6">
               <DashboardStack
                 stages={stages}
                 highlightStage={hoverStage}
@@ -84,7 +81,7 @@ export function OverviewClient({
           </section>
 
           {next?.playbook_steps ? (
-            <section className="rounded-card border border-ink bg-white p-6">
+            <section className="rounded-card border border-ink bg-white p-5 desk:p-6">
               <p className="mono m-0 text-[10px] tracking-[0.12em] text-muted">UP NEXT</p>
               <h2 className="mt-2 m-0 text-[20px] font-semibold tracking-[-0.02em]">
                 {next.playbook_steps.title}
@@ -115,7 +112,7 @@ export function OverviewClient({
             <h2 className="m-0 text-[15px] font-semibold tracking-[-0.015em]">Coming up</h2>
             <ul className="mt-3 m-0 list-none divide-y divide-line border-y border-line p-0">
               {upcoming.map((row) => (
-                <li key={row.id} className="flex items-center justify-between gap-4 py-3.5">
+                <li key={row.id} className="flex items-center justify-between gap-4 py-3">
                   <div className="min-w-0">
                     <Link
                       href={`/app/steps/${row.playbook_steps!.slug}`}
@@ -137,13 +134,13 @@ export function OverviewClient({
             </ul>
           </section>
 
-          <section className="flex flex-col gap-3">
-            <h2 className="m-0 text-[15px] font-semibold tracking-[-0.015em]">Your steps</h2>
+          <section className="flex flex-col gap-2.5">
+            <h2 className="m-0 text-[15px] font-semibold tracking-[-0.015em]">Stages</h2>
             {stages.map((stage) => (
               <div
                 key={stage.stage}
                 id={`stage-${stage.stage}`}
-                className={`rounded-card border px-4 py-4 ${
+                className={`rounded-card border px-4 py-3.5 ${
                   hoverStage === stage.stage ? "border-done bg-[#F4F9F5]" : "border-line bg-white"
                 }`}
                 onMouseEnter={() => setHoverStage(stage.stage)}
@@ -163,11 +160,11 @@ export function OverviewClient({
           </section>
         </div>
 
-        <aside className="flex flex-col gap-5 desk:sticky desk:top-6">
+        <aside className="flex flex-col gap-4 desk:sticky desk:top-6">
           <section className="rounded-card border border-line p-5">
             <p className="mono m-0 text-[10px] tracking-[0.12em] text-muted">PROGRESS</p>
             <p className="mt-2 m-0 text-[22px] font-semibold tracking-[-0.02em]">
-              {doneCount} of {steps.length} steps
+              {doneCount} of {steps.length}
             </p>
             <div className="mt-3 h-1.5 overflow-hidden rounded-pill bg-[#ECECEA]">
               <div
@@ -175,10 +172,11 @@ export function OverviewClient({
                 style={{ width: `${progressPct}%` }}
               />
             </div>
+            <p className="mt-2 m-0 text-[12px] text-muted">{progressPct}% complete</p>
           </section>
 
           <section className="rounded-card border border-line p-5">
-            <p className="mono m-0 text-[10px] tracking-[0.12em] text-muted">YOUR PEOPLE</p>
+            <p className="mono m-0 text-[10px] tracking-[0.12em] text-muted">PEOPLE</p>
             <ul className="mt-3 m-0 flex list-none flex-col gap-3 p-0">
               {people.map((person) => {
                 const status = introByProfessional.get(person.id) ?? "not yet";
@@ -204,10 +202,11 @@ export function OverviewClient({
           </section>
 
           <section className="rounded-card border border-line p-5">
-            <p className="mono m-0 text-[10px] tracking-[0.12em] text-muted">DAYS SINCE YOU STARTED</p>
+            <p className="mono m-0 text-[10px] tracking-[0.12em] text-muted">DAY</p>
             <p className="mt-2 m-0 text-[22px] font-semibold tracking-[-0.02em]">
               {daysSinceStarted}
             </p>
+            <p className="mt-1 m-0 text-[12px] text-muted">since you started</p>
           </section>
         </aside>
       </div>

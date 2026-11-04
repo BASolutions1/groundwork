@@ -22,16 +22,20 @@ export function BrandLogo({
   priority = false,
 }: Props) {
   const mark = (
-    <span className={`inline-flex items-center gap-2 ${className}`.trim()}>
+    <span className={`inline-flex items-center gap-1.5 ${className}`.trim()}>
       <Image
         src="/brand/logo-icon.png"
         alt={iconOnly ? "Groundwork" : ""}
         width={93}
         height={112}
         priority={priority}
-        className={iconClassName}
+        className={`relative -top-px ${iconClassName}`.trim()}
       />
-      {iconOnly ? null : <span className={textClassName}>Groundwork</span>}
+      {iconOnly ? null : (
+        <span className={`relative top-px leading-none ${textClassName}`.trim()}>
+          Groundwork
+        </span>
+      )}
     </span>
   );
 

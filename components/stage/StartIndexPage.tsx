@@ -1,9 +1,8 @@
+import { Bento } from "@/components/Bento";
 import { Footer } from "@/components/Footer";
 import { GroundworkStack } from "@/components/GroundworkStack";
 import { SiteNav } from "@/components/SiteNav";
 import { StartForm } from "@/components/StartForm";
-import { vignetteFor } from "@/components/bento/vignettes";
-import { HOME_FLOW_CARDS } from "@/lib/home-flow";
 import { startIndexBreadcrumbJsonLd } from "@/lib/stages/seo";
 
 export function StartIndexPage() {
@@ -38,43 +37,7 @@ export function StartIndexPage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-[1200px] px-6 py-14 desk:px-8 desk:py-20">
-          <div className="grid grid-cols-1 gap-3 tab:grid-cols-2 desk:grid-cols-6 desk:gap-4">
-            {HOME_FLOW_CARDS.map((card, index) => {
-              const body = (
-                <div
-                  className={`relative flex h-full flex-col gap-2.5 overflow-hidden rounded-card ${card.surface} ${card.paddingClass}`}
-                  style={{ minHeight: Math.min(card.minHeight, 360) }}
-                >
-                  <div className={`relative z-10 flex flex-col gap-1.5 ${card.textClass}`}>
-                    <p className="mono m-0 text-[10px] tracking-[0.12em] text-muted">
-                      {String(index + 1).padStart(2, "0")} / 07
-                    </p>
-                    <h2 className="m-0 text-[19px] font-semibold tracking-[-0.015em]">
-                      {card.title}
-                    </h2>
-                    <p className={`m-0 text-[13px] leading-normal ${card.descriptionClass}`}>
-                      {card.description}
-                    </p>
-                  </div>
-                  {vignetteFor(card.vignette)}
-                </div>
-              );
-
-              return (
-                <article key={card.title} className={card.spanClass}>
-                  {card.href ? (
-                    <a href={card.href} className="block h-full text-inherit no-underline">
-                      {body}
-                    </a>
-                  ) : (
-                    body
-                  )}
-                </article>
-              );
-            })}
-          </div>
-        </section>
+        <Bento showHeading={false} />
 
         <StartForm />
       </main>
