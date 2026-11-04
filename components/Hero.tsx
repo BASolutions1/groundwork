@@ -78,13 +78,14 @@ export function Hero() {
       className="hero relative flex flex-col overflow-hidden min-[700px]:block"
       style={
         {
-          background: "var(--hero-studio-mid)",
+          background: "#ffffff",
         } as CSSProperties
       }
     >
       <div
         ref={stageRef}
         className="hero-stage pointer-events-none relative z-0 order-2 aspect-[5/4] w-full min-[700px]:absolute min-[700px]:inset-0 min-[700px]:aspect-auto"
+        style={{ background: "var(--hero-studio-mid)" }}
       >
         <div ref={imageWrapRef} className="hero-laptop-wrap absolute inset-0">
           <Image
@@ -100,11 +101,11 @@ export function Hero() {
       </div>
 
       <div
-        className="hero-fade-bottom pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-20 min-[700px]:h-[220px] min-[1024px]:h-[280px]"
+        className="hero-fade-bottom pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-28 min-[700px]:h-[280px] min-[1024px]:h-[340px]"
         aria-hidden="true"
       />
 
-      <div className="relative z-[2] order-1 mx-auto flex w-full max-w-[1240px] flex-1 flex-col justify-center px-6 pb-10 pt-[6.75rem] min-[700px]:min-h-[780px] min-[700px]:pt-[5.75rem] min-[700px]:pb-28 desk:px-8 desk:pb-36 min-[1024px]:min-h-[920px]">
+      <div className="relative z-[2] order-1 mx-auto flex w-full max-w-[1240px] flex-1 flex-col justify-center px-6 pb-10 pt-[6.75rem] min-[700px]:min-h-[820px] min-[700px]:pt-[5.75rem] min-[700px]:pb-32 desk:px-8 desk:pb-40 min-[1024px]:min-h-[960px]">
         <div className="flex max-w-[480px] min-w-0 flex-col gap-[22px] min-[700px]:gap-[26px]">
           <h1 className="hero-title m-0 text-[clamp(2rem,6.5vw,3.875rem)] leading-[1.02] font-medium tracking-[-0.035em] text-ink">
             Start your business.

@@ -6,7 +6,7 @@ const facts = [
 
 export function FactsStrip() {
   return (
-    <section className="border-y border-line">
+    <section className="border-b border-line bg-white">
       <div className="mx-auto grid max-w-[1200px] grid-cols-1 px-6 tab:grid-cols-3 desk:px-8">
         {facts.map((fact) => (
           <div
