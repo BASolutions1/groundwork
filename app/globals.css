@@ -18,6 +18,11 @@
   --breakpoint-desk: 900px;
   --background-image-card-tint: linear-gradient(160deg, #f4f6f2, #eaf0eb);
   --background-image-card-accent: linear-gradient(160deg, #eef4ef, #dcebe1);
+  /* Studio greys sampled from /public/hero/laptop-v5.png */
+  --hero-studio-light: #efecef;
+  --hero-studio-mid: #e2e0e6;
+  --hero-studio-edge: #c9c7d1;
+  --hero-bg: var(--hero-studio-mid);
 }
 
 html {

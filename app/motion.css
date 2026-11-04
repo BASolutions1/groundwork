@@ -37,6 +37,62 @@
   background: #ffffff;
 }
 
+.stack-current-outline {
+  animation: stackcurrent 3.2s linear infinite;
+}
+
+@keyframes stackcurrent {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .stack-prep:not(.stack-screen-mode) .stack-slab,
+  .stack-prep:not(.stack-screen-mode) .stack-block,
+  .stack-prep:not(.stack-screen-mode) .stack-current-outline {
+    opacity: 0;
+  }
+}
+
+.hero-fade-bottom {
+  /* Soft handoff into the FactsStrip. */
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.55) 55%,
+    #ffffff 100%
+  );
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @media (min-width: 1024px) {
+    .hero-float {
+      animation: hero-laptop-float 9s ease-in-out infinite;
+    }
+  }
+}
+
+@keyframes hero-laptop-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+.stack-screen-mode .stack-diagram {
+  max-height: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-float {
+    animation: none !important;
+  }
+}
+
 .chaos-stage {
   perspective: 1400px;
 }
@@ -595,6 +651,7 @@
   .tick-next,
   .bar,
   .tool-join,
+  .stack-current-outline,
   .type,
   .type-caret,
   .ans,

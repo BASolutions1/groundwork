@@ -6,8 +6,8 @@ const links = [
 
 export function Nav() {
   return (
-    <header>
-      <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-6 py-[22px] desk:px-8">
+    <header className="pointer-events-none absolute inset-x-0 top-0 z-30">
+      <div className="pointer-events-auto mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-6 py-[22px] desk:px-8">
         <div className="flex min-w-0 items-center gap-11">
           <a
             href="#top"
@@ -45,7 +45,7 @@ export function Nav() {
         </div>
       </div>
       <nav
-        className="mx-auto flex max-w-[1200px] gap-5 overflow-x-auto px-6 pb-3 desk:hidden"
+        className="pointer-events-auto mx-auto flex max-w-[1200px] gap-5 overflow-x-auto px-6 pb-3 desk:hidden"
         aria-label="Page"
       >
         {links.map((link) => (

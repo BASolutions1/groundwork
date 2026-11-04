@@ -10,9 +10,11 @@ import { StartForm } from "@/components/StartForm";
 export default function Page() {
   return (
     <>
-      <Nav />
-      <main>
+      <div className="relative">
+        <Nav />
         <Hero />
+      </div>
+      <main>
         <FactsStrip />
         <Bento />
         <HowItWorks />
