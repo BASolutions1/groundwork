@@ -63,7 +63,7 @@ export function StepsListClient({ steps }: Props) {
           >
             <StageBlockIcon fill={stage.fill} active={stage.hasNext} />
             <span className="text-[14px] font-semibold tracking-[-0.015em]">
-              {String(stage.stage).padStart(2, "0")} {stage.title}
+              {stage.stage} {stage.title}
             </span>
             <span className="ml-auto text-[12px] text-muted">
               {stage.done}/{stage.total}

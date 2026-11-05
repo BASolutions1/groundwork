@@ -149,7 +149,7 @@ export function OverviewClient({
                 <div className="flex items-center gap-2.5">
                   <StageBlockIcon fill={stage.fill} active={stage.hasNext} />
                   <p className="m-0 text-[14px] font-semibold tracking-[-0.015em]">
-                    {String(stage.stage).padStart(2, "0")} {stage.title}
+                    {stage.stage} {stage.title}
                   </p>
                   <span className="ml-auto text-[12px] text-muted">
                     {stage.done}/{stage.total}

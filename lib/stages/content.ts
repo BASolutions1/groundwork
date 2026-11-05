@@ -137,5 +137,5 @@ export function stagePath(slug: string) {
 }
 
 export function stepLabel(step: number) {
-  return `STEP ${String(step).padStart(2, "0")} OF 07`;
+  return `STEP ${step} OF 7`;
 }

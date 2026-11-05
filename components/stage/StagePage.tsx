@@ -185,7 +185,7 @@ export function StagePage({ stage }: { stage: StageContent }) {
             </div>
             <ol className="stage-parts m-0 grid list-none gap-0 p-0 desk:grid-cols-2">
               {stage.parts.map((part, index) => {
-                const n = String(index + 1).padStart(2, "0");
+                const n = String(index + 1);
                 const last = index === stage.parts.length - 1;
                 const evenCount = stage.parts.length % 2 === 0;
                 const inLastRow = evenCount

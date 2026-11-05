@@ -267,7 +267,7 @@ export function DashboardStack({
                     letterSpacing: "0.08em",
                   }}
                 >
-                  {String(stage.stage).padStart(2, "0")}
+                  {stage.stage}
                 </text>
                 <text
                   y={8}

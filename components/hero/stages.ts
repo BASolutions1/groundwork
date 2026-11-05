@@ -19,7 +19,7 @@ export const STAGES: Stage[] = [
   {
     id: "register",
     name: "Register",
-    number: "01",
+    number: "1",
     done: true,
     person: {
       role: "Accountant",
@@ -31,7 +31,7 @@ export const STAGES: Stage[] = [
   {
     id: "setup",
     name: "Set up",
-    number: "02",
+    number: "2",
     done: true,
     person: {
       role: "Bookkeeper",
@@ -43,7 +43,7 @@ export const STAGES: Stage[] = [
   {
     id: "paid",
     name: "Get paid",
-    number: "03",
+    number: "3",
     done: false,
     person: {
       role: "Your guide",
@@ -55,7 +55,7 @@ export const STAGES: Stage[] = [
   {
     id: "found",
     name: "Get found",
-    number: "04",
+    number: "4",
     done: false,
     person: {
       role: "Marketing",
@@ -67,7 +67,7 @@ export const STAGES: Stage[] = [
   {
     id: "grow",
     name: "Grow",
-    number: "05",
+    number: "5",
     done: false,
     person: {
       role: "Advisor",
