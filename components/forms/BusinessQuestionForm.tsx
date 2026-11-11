@@ -54,7 +54,10 @@ export function BusinessQuestionForm({
   const inputId = `${idPrefix}-business`;
 
   return (
-    <form onSubmit={onSubmit} className={`flex flex-col gap-3 ${className}`}>
+    <form
+      onSubmit={onSubmit}
+      className={`@container flex w-full flex-col gap-3 ${className}`}
+    >
       <label htmlFor={inputId} className="text-sm font-medium">
         What kind of business are you starting?
       </label>
@@ -62,7 +65,7 @@ export function BusinessQuestionForm({
         className={
           stacked
             ? "flex w-full flex-col gap-2"
-            : "flex w-full flex-col gap-2 min-[480px]:flex-row"
+            : "flex w-full flex-col gap-2 @min-[24rem]:flex-row"
         }
       >
         <input

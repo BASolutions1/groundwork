@@ -34,6 +34,7 @@ export const HOME_FLOW_CARDS: HomeFlowCard[] = [
     description:
       "Business banking, bookkeeping, taxes and remittances. No surprises in the spring.",
     vignette: "money",
+    href: "/start/business-bank-account-and-bookkeeping",
     spanClass: "desk:col-span-2",
     surface: "bg-card-tint",
     minHeight: 400,
@@ -45,6 +46,7 @@ export const HOME_FLOW_CARDS: HomeFlowCard[] = [
     title: "Estimate, invoice, get paid",
     description: "Send a proper invoice. Get paid by card or e-transfer, on time.",
     vignette: "paid",
+    href: "/start/estimates-invoices-and-getting-paid",
     spanClass: "desk:col-span-2",
     surface: "bg-card-tint",
     minHeight: 380,
@@ -57,6 +59,7 @@ export const HOME_FLOW_CARDS: HomeFlowCard[] = [
     description:
       "Proven local SEO, done for you. Show up when people search, including in AI answers, so you can focus on the work.",
     vignette: "presence",
+    href: "/start/get-found-online",
     spanClass: "tab:col-span-2 desk:col-span-4",
     surface: "bg-card-accent",
     minHeight: 520,
@@ -69,6 +72,7 @@ export const HOME_FLOW_CARDS: HomeFlowCard[] = [
     description:
       "Estimating, invoicing, scheduling, CRM. A few good ones that talk to each other, not thirty.",
     vignette: "tools",
+    href: "/start/tools-that-fit",
     spanClass: "desk:col-span-2",
     surface: "bg-card-tint",
     minHeight: 380,
@@ -81,6 +85,7 @@ export const HOME_FLOW_CARDS: HomeFlowCard[] = [
     description:
       "Accountant, insurance, lawyer, suppliers. Vetted, local to you, and we make the introduction.",
     vignette: "network",
+    href: "/start/who-to-call",
     spanClass: "desk:col-span-2",
     surface: "bg-card-tint",
     minHeight: 520,
@@ -93,6 +98,7 @@ export const HOME_FLOW_CARDS: HomeFlowCard[] = [
     description:
       "When a step needs judgement or a phone call, someone who's already done this picks it up with you.",
     vignette: "person",
+    href: "/start/a-guide-for-the-hard-parts",
     spanClass: "desk:col-span-2",
     surface: "bg-[linear-gradient(160deg,#1C1C1E_0%,#0E0E10_100%)] text-white",
     minHeight: 380,

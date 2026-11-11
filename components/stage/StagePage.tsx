@@ -5,17 +5,10 @@ import { Footer } from "@/components/Footer";
 import { BusinessQuestionForm } from "@/components/forms/BusinessQuestionForm";
 import { SiteNav } from "@/components/SiteNav";
 import { StartForm } from "@/components/StartForm";
-import {
-  getAdjacentStages,
-  stagePath,
-  stepLabel,
-} from "@/lib/stages/content";
+import { getAdjacentStages, stagePath, stepLabel } from "@/lib/stages/content";
 import { stageBreadcrumbJsonLd, stageFaqJsonLd } from "@/lib/stages/seo";
 import type { StageContent } from "@/lib/stages/types";
-import {
-  StageProgressStack,
-  stackIndexForStep,
-} from "./StageProgressStack";
+import { StageProgressStack, stackIndexForStep } from "./StageProgressStack";
 
 function StageSectionHeading({ children }: { children: ReactNode }) {
   return (
@@ -63,11 +56,11 @@ function StageBreadcrumb({ title }: { title: string }) {
 
 function StageHeroCopy({ stage }: { stage: StageContent }) {
   return (
-    <div className="flex max-w-[540px] flex-col gap-5">
+    <div className="flex min-w-0 flex-col gap-5">
       <p className="mono m-0 text-[11px] tracking-[0.14em] text-muted">
-        {stepLabel(stage.step)}
+        {stage.eyebrow ?? stepLabel(stage.step)}
       </p>
-      <h1 className="m-0 text-[clamp(1.9rem,4.2vw,2.85rem)] leading-[1.06] font-medium tracking-[-0.035em]">
+      <h1 className="m-0 text-[clamp(1.75rem,3.6vw,2.85rem)] leading-[1.06] font-medium tracking-[-0.035em]">
         {stage.h1}
       </h1>
       <p className="m-0 text-[16px] leading-[1.55] text-secondary">{stage.heroLead}</p>
@@ -76,56 +69,54 @@ function StageHeroCopy({ stage }: { stage: StageContent }) {
   );
 }
 
+function HeroArtwork({ src }: { src: string }) {
+  return (
+    <Image
+      src={src}
+      alt=""
+      fill
+      priority
+      quality={90}
+      sizes="100vw"
+      className="object-cover object-top [mask-image:linear-gradient(to_bottom,#000_0%,#000_84%,#000000b3_93%,#0000_100%)] [mask-repeat:no-repeat] [mask-size:100%_100%] [-webkit-mask-image:linear-gradient(to_bottom,#000_0%,#000_84%,#000000b3_93%,#0000_100%)] [-webkit-mask-repeat:no-repeat] [-webkit-mask-size:100%_100%]"
+    />
+  );
+}
+
 export function StagePage({ stage }: { stage: StageContent }) {
   const { prev, next } = getAdjacentStages(stage.slug);
   const heroImage = stage.heroImage;
+  const copyOnRight = stage.heroAlign === "right";
 
   return (
     <>
       {heroImage ? (
-        <div className="relative overflow-hidden bg-[#F6F6FA]">
+        <div className="relative overflow-hidden bg-white">
           <SiteNav overlay />
           {/*
-            This asset is composed as a full-bleed hero: empty left for copy, stack on the right.
-            Do not treat it as a side-column image.
+            The artwork is 16:9 and full-bleed. The hero stays at least that
+            tall, so a wide window shows the whole stack instead of cropping it.
+            Copy sits in the empty side once the window is wide enough.
           */}
           <section className="relative">
-            <div className="relative w-full">
-              {/* Full-bleed: match image aspect so object-contain fills edge-to-edge (no side gutters). */}
-              <div className="relative hidden aspect-[16/9] w-full min-[1024px]:block">
-                <Image
-                  src={heroImage}
-                  alt=""
-                  fill
-                  priority
-                  quality={90}
-                  sizes="100vw"
-                  className="object-cover object-right"
-                />
-              </div>
-              <div className="relative z-[2] mx-auto flex max-w-[1200px] flex-col px-6 pt-28 pb-10 min-[1024px]:absolute min-[1024px]:inset-0 min-[1024px]:mx-auto min-[1024px]:w-full min-[1024px]:justify-center min-[1024px]:px-8 min-[1024px]:pt-24 min-[1024px]:pb-12">
-                <div className="flex max-w-[500px] flex-col gap-5">
-                  <StageBreadcrumb title={stage.shortTitle} />
-                  <StageHeroCopy stage={stage} />
-                </div>
-              </div>
-              {/* Mobile: show stack under the copy */}
-              <div className="relative mx-auto mt-2 aspect-[16/9] w-full max-w-[640px] min-[1024px]:hidden">
-                <Image
-                  src={heroImage}
-                  alt=""
-                  fill
-                  priority
-                  quality={90}
-                  sizes="640px"
-                  className="object-contain object-center"
-                />
+            <div className="pointer-events-none absolute inset-x-0 top-0 hidden aspect-[16/9] w-full min-[680px]:block">
+              <HeroArtwork src={heroImage} />
+            </div>
+            <div className="relative z-[2] mx-auto flex w-full max-w-[1200px] flex-col px-6 pt-32 pb-10 min-[680px]:min-h-[56.25vw] min-[900px]:justify-center min-[900px]:px-8 min-[900px]:pt-24 min-[900px]:pb-14">
+              <div
+                className={`flex w-full max-w-[500px] flex-col gap-5 ${
+                  copyOnRight
+                    ? "min-[680px]:ml-auto min-[680px]:w-[min(500px,46%)] min-[680px]:max-w-[min(500px,46%)]"
+                    : "min-[680px]:w-[min(500px,46%)] min-[680px]:max-w-[min(500px,46%)]"
+                }`}
+              >
+                <StageBreadcrumb title={stage.shortTitle} />
+                <StageHeroCopy stage={stage} />
               </div>
             </div>
-            <div
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-white"
-              aria-hidden
-            />
+            <div className="relative aspect-[16/9] w-full min-[680px]:hidden">
+              <HeroArtwork src={heroImage} />
+            </div>
           </section>
         </div>
       ) : (
@@ -165,7 +156,10 @@ export function StagePage({ stage }: { stage: StageContent }) {
             <StageSectionHeading>{stage.headings.what}</StageSectionHeading>
             <div className="flex min-w-0 flex-1 flex-col gap-4">
               {stage.whatThisStepIs.map((paragraph) => (
-                <p key={paragraph} className="m-0 text-[16px] leading-[1.65] text-secondary">
+                <p
+                  key={paragraph}
+                  className="m-0 text-[16px] leading-[1.65] text-secondary"
+                >
                   {paragraph}
                 </p>
               ))}
@@ -188,9 +182,7 @@ export function StagePage({ stage }: { stage: StageContent }) {
                 const n = String(index + 1);
                 const last = index === stage.parts.length - 1;
                 const evenCount = stage.parts.length % 2 === 0;
-                const inLastRow = evenCount
-                  ? index >= stage.parts.length - 2
-                  : last;
+                const inLastRow = evenCount ? index >= stage.parts.length - 2 : last;
                 return (
                   <li
                     key={part.label}
@@ -267,7 +259,7 @@ export function StagePage({ stage }: { stage: StageContent }) {
                   </p>
                 </div>
               </div>
-              <div className="order-1 min-w-0 min-[900px]:order-2">
+              <div className="relative order-1 min-w-0 min-[900px]:order-2">
                 {vignetteFor(stage.vignette, "stage")}
               </div>
             </div>
@@ -286,13 +278,15 @@ export function StagePage({ stage }: { stage: StageContent }) {
                 <h3 className="m-0 text-[16px] font-semibold tracking-[-0.015em]">
                   {item.question}
                 </h3>
-                <p className="m-0 mt-3 text-[14px] leading-[1.6] text-secondary">{item.answer}</p>
+                <p className="m-0 mt-3 text-[14px] leading-[1.6] text-secondary">
+                  {item.answer}
+                </p>
               </div>
             ))}
           </div>
           <p className="m-0 mx-auto mt-12 max-w-[36rem] text-center text-[12px] leading-normal text-muted">
-            Groundwork guides and refers. We do not give legal, tax or accounting advice. A
-            qualified professional confirms the specifics for your situation.
+            Groundwork guides and refers. We do not give legal, tax or accounting advice.
+            A qualified professional confirms the specifics for your situation.
           </p>
         </section>
 
@@ -323,8 +317,11 @@ export function StagePage({ stage }: { stage: StageContent }) {
               )}
             </div>
             <div className="flex flex-wrap gap-x-6 gap-y-2">
-              <a href="/start" className="text-[13px] font-medium text-muted hover:text-ink">
-                All seven stages
+              <a
+                href="/start"
+                className="text-[13px] font-medium text-muted hover:text-ink"
+              >
+                All stages
               </a>
               <a href="/" className="text-[13px] font-medium text-muted hover:text-ink">
                 Homepage
