@@ -45,21 +45,19 @@ export function AuthForm({
         return;
       }
       if ("needsConfirm" in result && result.needsConfirm) {
-        setPendingEmail(
-          "email" in result && typeof result.email === "string" ? result.email : null,
-        );
+        const fields = result as {
+          email?: string;
+          message?: string;
+          notice?: string;
+        };
+        setPendingEmail(typeof fields.email === "string" ? fields.email : null);
         setNotice(
-          "notice" in result &&
-            (result.notice === "signup" || result.notice === "unverified" || result.notice === "magic")
-            ? result.notice
+          fields.notice === "unverified" || fields.notice === "magic" || fields.notice === "signup"
+            ? fields.notice
             : "signup",
         );
         setResent(false);
-        setMessage(
-          "message" in result && typeof result.message === "string"
-            ? result.message
-            : "Check your email.",
-        );
+        setMessage(typeof fields.message === "string" ? fields.message : "Check your email.");
       }
     });
   }
