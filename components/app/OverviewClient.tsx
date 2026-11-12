@@ -61,14 +61,14 @@ export function OverviewClient({
 
       <div className="grid items-start gap-7 desk:grid-cols-[minmax(0,1.5fr)_minmax(260px,0.85fr)] desk:gap-8">
         <div className="flex min-w-0 flex-col gap-7">
-          <section className="rounded-card border border-line bg-[#FAFBFA]">
+          <section className="overflow-hidden rounded-card border border-line bg-white">
             <div className="flex items-baseline justify-between gap-3 px-5 pt-4 pb-1">
               <p className="mono m-0 text-[10px] tracking-[0.12em] text-muted">STACK</p>
               <p className="m-0 text-[12px] text-muted">
                 {doneCount}/{steps.length} done · click a stage
               </p>
             </div>
-            <div className="px-5 pb-5 pt-2 desk:px-8 desk:pb-6">
+            <div className="px-3 pt-1 pb-1">
               <DashboardStack
                 stages={stages}
                 highlightStage={hoverStage}

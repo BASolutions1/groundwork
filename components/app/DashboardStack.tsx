@@ -59,7 +59,7 @@ export function DashboardStack({
         width={1254}
         height={1254}
         priority
-        className="block h-auto w-full"
+        className="block h-auto w-full [mask-image:linear-gradient(to_bottom,#000_0%,#000_90%,#0009_96%,transparent_100%),linear-gradient(to_right,transparent,#000_7%,#000_93%,transparent)] [mask-composite:intersect] [-webkit-mask-image:linear-gradient(to_bottom,#000_0%,#000_90%,#0009_96%,transparent_100%),linear-gradient(to_right,transparent,#000_7%,#000_93%,transparent)] [-webkit-mask-composite:source-in]"
       />
       <div className="absolute top-[7%] right-[27%] bottom-[24%] left-[27%] flex flex-col">
         {[7, 6, 5, 4, 3, 2, 1].map((stage) => (
