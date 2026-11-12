@@ -30,13 +30,19 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       : row.playbook_steps,
   }));
 
+  const { data: founder } = await supabase
+    .from("founders")
+    .select("user_id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
   const nextStep = normalized
     .filter((row) => row.status === "next" && row.playbook_steps)
     .sort((a, b) => (a.playbook_steps!.order ?? 0) - (b.playbook_steps!.order ?? 0))[0];
 
   return (
     <div className="flex min-h-screen bg-white">
-      <AppSidebar />
+      <AppSidebar isFounder={Boolean(founder)} />
       <div className="flex min-w-0 flex-1 flex-col">
         <AppTopBar
           profile={(profile as Profile | null) ?? null}

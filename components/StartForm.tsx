@@ -3,6 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
+import { BusinessTypeInput } from "@/components/forms/BusinessTypeInput";
 import { BUSINESS_PREFILL_EVENT, readBusinessPrefill } from "@/lib/prefill";
 import { buildSignupHref } from "@/lib/onboarding";
 
@@ -63,14 +64,15 @@ export function StartForm() {
           conversation is free.
         </p>
         <form onSubmit={onSubmit} className="mt-1.5 flex w-full flex-col gap-2">
-          <input
+          <BusinessTypeInput
+            id="start-business"
             name="business"
-            type="text"
             required
             value={business}
-            onChange={(event) => setBusiness(event.target.value)}
+            onChange={setBusiness}
+            aria-label="What kind of business?"
             placeholder="What kind of business?"
-            className="h-12 rounded-control border border-[#D6D6D3] bg-white px-4 text-[15px]"
+            className="h-12 w-full rounded-control border border-[#D6D6D3] bg-white px-4 text-[15px]"
           />
           <input
             name="phone"

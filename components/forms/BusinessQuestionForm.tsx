@@ -3,6 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
+import { BusinessTypeInput } from "@/components/forms/BusinessTypeInput";
 import { publishBusinessPrefill, readBusinessPrefill } from "@/lib/prefill";
 import { buildSignupHref } from "@/lib/onboarding";
 
@@ -68,15 +69,15 @@ export function BusinessQuestionForm({
             : "flex w-full flex-col gap-2 @min-[24rem]:flex-row"
         }
       >
-        <input
+        <BusinessTypeInput
           id={inputId}
           name="business"
-          type="text"
           required
           value={business}
-          onChange={(event) => setBusiness(event.target.value)}
+          onChange={setBusiness}
           placeholder="Cafe, consulting, retail..."
-          className="box-border h-12 min-h-12 w-full min-w-0 flex-1 rounded-control border border-[#C9C9C6] bg-white px-4 text-[15px] leading-none"
+          wrapperClassName="min-w-0 flex-1"
+          className="box-border h-12 min-h-12 w-full rounded-control border border-[#C9C9C6] bg-white px-4 text-[15px] leading-none"
         />
         <button
           type="submit"

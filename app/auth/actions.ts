@@ -19,6 +19,21 @@ function siteOrigin() {
   );
 }
 
+function emailSendError(error: { message: string; code?: string }) {
+  const message = error.message.toLowerCase();
+  const limited = error.code === "over_email_send_rate_limit" || message.includes("rate limit");
+  if (limited && message.includes("after")) {
+    return "Wait a minute before sending another email.";
+  }
+  if (limited) {
+    return "The email could not be sent. This project's mailer only allows a few messages an hour. Wait and try again.";
+  }
+  if (error.code === "email_address_not_authorized" || message.includes("not authorized")) {
+    return "This project can't email that address yet. The built-in mailer only delivers to team addresses until a custom sender is connected.";
+  }
+  return error.message;
+}
+
 async function persistOnboarding(payload: OnboardingPayload) {
   const jar = await cookies();
   jar.set(ONBOARDING_COOKIE, encodeOnboarding(payload), {
@@ -142,7 +157,14 @@ export async function signUpWithPassword(formData: FormData) {
   });
 
   if (error) {
-    return { error: error.message };
+    return { error: emailSendError(error) };
+  }
+
+  // Existing account: Supabase returns an empty identities list and does not send mail.
+  if (data.user && data.user.identities?.length === 0) {
+    return {
+      error: "An account with this email already exists. Sign in instead. If it was never confirmed, sign in with your password to resend the link.",
+    };
   }
 
   // Confirm email is on: no session until they click the link.
@@ -150,6 +172,7 @@ export async function signUpWithPassword(formData: FormData) {
     return {
       error: null,
       needsConfirm: true,
+      notice: "signup" as const,
       email,
       message:
         "Check your email for a confirmation link. After you confirm, you will land in your list.",
@@ -181,12 +204,12 @@ export async function resendConfirmation(formData: FormData) {
   });
 
   if (error) {
-    return { error: error.message };
+    return { error: emailSendError(error) };
   }
 
   return {
     error: null,
-    message: "Confirmation email sent again. Check your inbox.",
+    message: "Confirmation email sent again. Check your inbox, and spam if it isn't there.",
   };
 }
 
@@ -202,11 +225,16 @@ export async function signInWithPassword(formData: FormData) {
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
-    const message =
-      error.message.toLowerCase().includes("email not confirmed")
-        ? "Confirm your email first. Check your inbox for the link, or resend it from the signup page."
-        : error.message;
-    return { error: message };
+    if (error.message.toLowerCase().includes("email not confirmed")) {
+      return {
+        error: null,
+        needsConfirm: true,
+        notice: "unverified" as const,
+        email,
+        message: "This email isn't verified yet. Check your inbox for the confirmation link, or resend it.",
+      };
+    }
+    return { error: emailSendError(error) };
   }
 
   const profile = await ensureProfile();
@@ -245,12 +273,13 @@ export async function signInWithMagicLink(formData: FormData) {
   });
 
   if (error) {
-    return { error: error.message };
+    return { error: emailSendError(error) };
   }
 
   return {
     error: null,
     needsConfirm: true,
+    notice: "magic" as const,
     email,
     message: "Check your email for the magic link.",
   };

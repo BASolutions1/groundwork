@@ -24,7 +24,7 @@ async function LoginBody({ searchParams }: Props) {
       </p>
       {params.error ? (
         <p className="mt-4 text-center text-sm text-red-700">
-          Could not complete sign in. Try again.
+          That link is invalid or has expired. Sign in below, and resend the confirmation if your email still isn&apos;t verified.
         </p>
       ) : null}
       <div className="mt-8">

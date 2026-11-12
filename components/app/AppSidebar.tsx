@@ -4,7 +4,7 @@ import { signOut } from "@/app/auth/actions";
 import { BrandLogo } from "@/components/BrandLogo";
 import { AppNavLinks } from "@/components/app/AppNavLinks";
 
-export function AppSidebar() {
+export function AppSidebar({ isFounder = false }: { isFounder?: boolean }) {
   return (
     <aside className="sticky top-0 flex h-screen w-[232px] shrink-0 flex-col border-r border-line bg-white">
       <div className="flex items-center px-5 pt-6 pb-5">
@@ -14,7 +14,7 @@ export function AppSidebar() {
           textClassName="text-[17px] font-semibold tracking-[-0.02em] text-ink"
         />
       </div>
-      <AppNavLinks />
+      <AppNavLinks isFounder={isFounder} />
       <div className="border-t border-line p-4">
         <div className="rounded-card border border-line bg-[linear-gradient(160deg,#f4f6f2,#eaf0eb)] p-3.5">
           <div className="flex items-center gap-2.5">

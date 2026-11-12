@@ -37,7 +37,6 @@ export function OverviewClient({
   const introByProfessional = new Map(
     introductions.map((item) => [item.professional_id, item.status]),
   );
-  const settleOnce = doneCount === 0;
   const progressPct = steps.length ? Math.round((doneCount / steps.length) * 100) : 0;
 
   function scrollToStage(stage: number) {
@@ -75,7 +74,6 @@ export function OverviewClient({
                 highlightStage={hoverStage}
                 onHoverStage={setHoverStage}
                 onSelectStage={scrollToStage}
-                settleOnce={settleOnce}
               />
             </div>
           </section>

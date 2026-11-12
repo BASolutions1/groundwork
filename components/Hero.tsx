@@ -8,6 +8,7 @@ import {
   type CSSProperties,
   type FormEvent,
 } from "react";
+import { BusinessTypeInput } from "@/components/forms/BusinessTypeInput";
 import { publishBusinessPrefill } from "@/lib/prefill";
 
 const standby = [
@@ -152,14 +153,14 @@ export function Hero() {
               What kind of business are you starting?
             </label>
             <div className="flex flex-col gap-1.5 min-[480px]:flex-row">
-              <input
+              <BusinessTypeInput
                 id="hero-business"
                 name="business"
-                type="text"
                 value={business}
-                onChange={(event) => setBusiness(event.target.value)}
+                onChange={setBusiness}
                 placeholder="Cafe, consulting, retail..."
-                className="h-[46px] min-w-0 w-full flex-1 rounded-control border border-[#D6D6D3] bg-white/95 px-3.5 text-[15px] backdrop-blur-[2px]"
+                wrapperClassName="min-w-0 flex-1"
+                className="h-[46px] w-full rounded-control border border-[#D6D6D3] bg-white/95 px-3.5 text-[15px] backdrop-blur-[2px]"
               />
               <button
                 type="submit"

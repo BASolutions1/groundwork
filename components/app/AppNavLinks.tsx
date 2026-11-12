@@ -22,7 +22,7 @@ const nav = [
   },
 ];
 
-export function AppNavLinks() {
+export function AppNavLinks({ isFounder = false }: { isFounder?: boolean }) {
   const pathname = usePathname();
 
   return (
@@ -44,6 +44,24 @@ export function AppNavLinks() {
           </Link>
         );
       })}
+      {isFounder ? (
+        <div className="mt-3 border-t border-[#E5E5E5] pt-3">
+          <p className="m-0 px-3 pb-1 font-mono text-[11px] tracking-[0.06em] text-[#55555A] uppercase">
+            Internal
+          </p>
+          <Link
+            href="/app/office"
+            aria-current={pathname.startsWith("/app/office") ? "page" : undefined}
+            className={`block rounded-control px-3 py-2 text-[14px] font-medium ${
+              pathname.startsWith("/app/office")
+                ? "bg-[#F0F4F1] text-ink"
+                : "text-secondary hover:bg-[#F4F4F2] hover:text-ink"
+            }`}
+          >
+            Site office
+          </Link>
+        </div>
+      ) : null}
     </nav>
   );
 }

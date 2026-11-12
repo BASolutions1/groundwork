@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 
 import { updateProfile } from "@/app/(app)/app/actions";
+import { BusinessTypeInput } from "@/components/forms/BusinessTypeInput";
 import type { Profile } from "@/lib/database.types";
 import { PROVINCES } from "@/lib/provinces";
 
@@ -75,14 +76,15 @@ export function SettingsForm({ profile, email }: Props) {
             className="h-11 rounded-control border border-[#D6D6D3] px-3 text-[15px] font-normal"
           />
         </label>
-        <label className="flex flex-col gap-1.5 text-sm font-medium">
-          Business type
-          <input
+        <div className="flex flex-col gap-1.5 text-sm font-medium">
+          <label htmlFor="settings-business-type">Business type</label>
+          <BusinessTypeInput
+            id="settings-business-type"
             name="businessType"
             defaultValue={profile.business_type ?? ""}
-            className="h-11 rounded-control border border-[#D6D6D3] px-3 text-[15px] font-normal"
+            className="h-11 w-full rounded-control border border-[#D6D6D3] px-3 text-[15px] font-normal"
           />
-        </label>
+        </div>
         <label className="flex flex-col gap-1.5 text-sm font-medium">
           Province
           <select

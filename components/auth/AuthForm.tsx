@@ -8,6 +8,7 @@ import {
   signInWithPassword,
   signUpWithPassword,
 } from "@/app/auth/actions";
+import { BusinessTypeInput } from "@/components/forms/BusinessTypeInput";
 
 type Props = {
   mode: "login" | "signup";
@@ -25,6 +26,8 @@ export function AuthForm({
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [pendingEmail, setPendingEmail] = useState<string | null>(null);
+  const [notice, setNotice] = useState<"signup" | "unverified" | "magic">("signup");
+  const [resent, setResent] = useState(false);
   const [pending, startTransition] = useTransition();
   const [tab, setTab] = useState<"password" | "magic">("password");
 
@@ -45,6 +48,13 @@ export function AuthForm({
         setPendingEmail(
           "email" in result && typeof result.email === "string" ? result.email : null,
         );
+        setNotice(
+          "notice" in result &&
+            (result.notice === "signup" || result.notice === "unverified" || result.notice === "magic")
+            ? result.notice
+            : "signup",
+        );
+        setResent(false);
         setMessage(
           "message" in result && typeof result.message === "string"
             ? result.message
@@ -65,6 +75,8 @@ export function AuthForm({
       }
       if (result.needsConfirm) {
         setPendingEmail(result.email ?? null);
+        setNotice(result.notice === "magic" ? "magic" : "signup");
+        setResent(false);
         setMessage(result.message ?? "Check your email.");
       }
     });
@@ -81,31 +93,67 @@ export function AuthForm({
         setError(result.error);
         return;
       }
+      setResent(true);
       setMessage(result.message ?? "Confirmation email sent again.");
     });
   }
 
   if (pendingEmail && message) {
+    const title = notice === "unverified" ? "This email isn't verified yet" : "Check your email";
+    const body =
+      notice === "unverified" ? (
+        <>
+          A confirmation link was already sent to{" "}
+          <span className="font-medium text-ink">{pendingEmail}</span>. Open it before signing in.
+          Check spam if it isn&apos;t in your inbox.
+        </>
+      ) : notice === "magic" ? (
+        <>
+          We sent a sign-in link to <span className="font-medium text-ink">{pendingEmail}</span>.
+          Open it on this device. Check spam if it isn&apos;t in your inbox.
+        </>
+      ) : (
+        <>
+          We sent a confirmation link to <span className="font-medium text-ink">{pendingEmail}</span>.
+          Open it to finish creating your account and load your list. Check spam if it isn&apos;t
+          in your inbox.
+        </>
+      );
+
     return (
       <div className="flex flex-col gap-4 rounded-card border border-line bg-[#FAFBFA] p-5 text-left">
-        <p className="m-0 text-[15px] font-semibold tracking-[-0.015em]">Check your email</p>
-        <p className="m-0 text-[14px] leading-normal text-secondary">
-          We sent a confirmation link to <span className="font-medium text-ink">{pendingEmail}</span>.
-          Open it to finish creating your account and load your list.
-        </p>
+        <p className="m-0 text-[15px] font-semibold tracking-[-0.015em]">{title}</p>
+        <p className="m-0 text-[14px] leading-normal text-secondary">{body}</p>
         <p className="m-0 text-[13px] text-muted">
-          The link expires after a while. You can resend it if needed.
+          {notice === "magic"
+            ? "The link expires after a while. Request another one if it doesn't arrive."
+            : "The link expires after a while. You can resend it if needed."}
         </p>
-        <button
-          type="button"
-          onClick={onResend}
-          disabled={pending}
-          className="h-10 cursor-pointer rounded-control border border-line bg-white text-[13px] font-medium hover:bg-[#F4F4F2] disabled:opacity-60"
-        >
-          {pending ? "Sending…" : "Resend confirmation email"}
-        </button>
+        {notice === "magic" ? (
+          <button
+            type="button"
+            onClick={() => {
+              setPendingEmail(null);
+              setMessage(null);
+              setError(null);
+              setResent(false);
+            }}
+            className="h-10 cursor-pointer rounded-control border border-line bg-white text-[13px] font-medium hover:bg-[#F4F4F2]"
+          >
+            Use a different email
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={onResend}
+            disabled={pending}
+            className="h-10 cursor-pointer rounded-control border border-line bg-white text-[13px] font-medium hover:bg-[#F4F4F2] disabled:opacity-60"
+          >
+            {pending ? "Sending…" : "Resend confirmation email"}
+          </button>
+        )}
         {error ? <p className="m-0 text-sm text-red-700">{error}</p> : null}
-        {message ? <p className="m-0 text-sm text-done">{message}</p> : null}
+        {resent && message ? <p className="m-0 text-sm text-done">{message}</p> : null}
       </div>
     );
   }
@@ -140,16 +188,17 @@ export function AuthForm({
           <input type="hidden" name="next" value={next} />
           {mode === "signup" ? (
             <>
-              <label className="flex flex-col gap-1.5 text-left text-sm font-medium">
-                Business type
-                <input
+              <div className="flex flex-col gap-1.5 text-left text-sm font-medium">
+                <label htmlFor="signup-business-type">Business type</label>
+                <BusinessTypeInput
+                  id="signup-business-type"
                   name="businessType"
                   defaultValue={businessType}
                   required
-                  className="h-11 rounded-control border border-[#D6D6D3] px-3 text-[15px] font-normal"
                   placeholder="Cafe, consulting, retail..."
+                  className="h-11 w-full rounded-control border border-[#D6D6D3] px-3 text-[15px] font-normal"
                 />
-              </label>
+              </div>
               <label className="flex flex-col gap-1.5 text-left text-sm font-medium">
                 Phone
                 <input
