@@ -140,6 +140,8 @@ export const STAGE_PAGES: StageContent[] = [
     h1: "How to register for GST/HST in Canada",
     heroLead:
       "The small-supplier threshold, the account on your business number, and a set-aside so the tax is there when you remit.",
+    heroImage: "/hero/gst-hero-set-up-green-stack-left.png",
+    heroAlign: "right",
     metaDescription:
       "How to register for GST/HST in Canada: the $30,000 small-supplier threshold, opening the account, and setting tax aside before you remit.",
     primaryQuery: "how to register for GST/HST in Canada",
@@ -273,6 +275,8 @@ export const STAGE_PAGES: StageContent[] = [
     h1: "WCB registration and business insurance in Canada",
     heroLead:
       "The workers' board for your province, and liability cover, before you hire or take the job.",
+    heroImage: "/hero/wcb-hero-set-up-green-stack-right.png",
+    heroAlign: "left",
     metaDescription:
       "WCB registration and small business insurance in Canada: workers' compensation when it applies, and liability cover before you hire or take a job.",
     primaryQuery: "WCB registration",
@@ -403,6 +407,8 @@ export const STAGE_PAGES: StageContent[] = [
     h1: "What software does a small business need?",
     heroLead:
       "Estimating, invoicing, scheduling, and a simple CRM. A few tools that share a client, instead of a pile of tabs.",
+    heroImage: "/hero/tools-hero-grow-green-stack-left.png",
+    heroAlign: "right",
     metaDescription:
       "What software a small business needs: estimating, invoicing, scheduling, and a CRM that share clients, without a pile of unused apps.",
     primaryQuery: "what software does a small business need",
@@ -467,6 +473,8 @@ export const STAGE_PAGES: StageContent[] = [
     h1: "Local SEO for a small business",
     heroLead:
       "A Google Business Profile, a few real reviews, and a simple page so you show up when people search nearby, including in AI answers.",
+    heroImage: "/hero/found-hero-get-found-green-stack-right.png",
+    heroAlign: "left",
     metaDescription:
       "Local SEO for a small business: claim your Google Business Profile, collect real reviews, and publish a simple page so you show up in search and Maps.",
     primaryQuery: "local SEO for a small business",
@@ -536,6 +544,8 @@ export const STAGE_PAGES: StageContent[] = [
     eyebrow: "WHEN YOU NEED THEM",
     heroLead:
       "An accountant, an insurance broker, a lawyer, and suppliers. Local to you, introduced when the step needs them.",
+    heroImage: "/hero/whotocall-hero-grow-green-stack-left.png",
+    heroAlign: "right",
     metaDescription:
       "Who to call when you start a business in Canada: an accountant, insurance broker, lawyer, and suppliers, introduced locally when you need them.",
     primaryQuery: "who to call when you start a business",
@@ -602,6 +612,8 @@ export const STAGE_PAGES: StageContent[] = [
     eyebrow: "ON THE HARD PARTS",
     heroLead:
       "When a step needs judgement or a phone call, someone who has already done this picks it up with you.",
+    heroImage: "/hero/guide-hero-grow-green-stack-right.png",
+    heroAlign: "left",
     metaDescription:
       "Help starting a business in Canada: a guide for the steps that need judgement, and a licensed professional when the form needs one.",
     primaryQuery: "help starting a business in Canada",

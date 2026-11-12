@@ -102,17 +102,21 @@ export function Hero() {
     <section
       id="top"
       ref={sectionRef}
-      className="hero relative flex flex-col overflow-hidden min-[1024px]:block"
+      className="hero relative overflow-hidden"
       style={
         {
-          background: "#ffffff",
+          background: "var(--hero-studio-light)",
         } as CSSProperties
       }
     >
+      {/*
+        The laptop is the hero background at every width, never a block
+        under the copy. Object position keeps it on the right so the
+        headline stays in the open studio on the left.
+      */}
       <div
         ref={stageRef}
-        className="hero-stage pointer-events-none relative z-0 order-2 aspect-[5/4] w-full min-[700px]:aspect-[16/11] min-[1024px]:absolute min-[1024px]:inset-0 min-[1024px]:aspect-auto"
-        style={{ background: "var(--hero-studio-mid)" }}
+        className="hero-stage pointer-events-none absolute inset-x-0 bottom-0 aspect-[3200/2003] w-full min-[700px]:inset-0 min-[700px]:aspect-auto"
       >
         <div ref={imageWrapRef} className="hero-laptop-wrap absolute inset-0">
           <Image
@@ -121,8 +125,8 @@ export function Hero() {
             fill
             priority
             quality={85}
-            sizes="(max-width: 1023px) 100vw, 100vw"
-            className="hero-laptop-img object-cover object-[82%_40%] min-[700px]:object-[75%_42%] min-[1024px]:object-[72%_40%]"
+            sizes="100vw"
+            className="hero-laptop-img object-cover object-center min-[700px]:object-right min-[1024px]:object-[72%_40%]"
           />
         </div>
       </div>
@@ -132,8 +136,8 @@ export function Hero() {
         aria-hidden="true"
       />
 
-      <div className="relative z-[2] order-1 mx-auto flex w-full max-w-[1240px] flex-1 flex-col justify-center px-6 pb-10 pt-[6.75rem] desk:px-8 min-[1024px]:min-h-[1000px] min-[1024px]:pt-[5.75rem] min-[1024px]:pb-44">
-        <div className="flex max-w-[480px] min-w-0 flex-col gap-[22px] min-[1024px]:-translate-y-7 min-[1024px]:gap-[26px]">
+      <div className="relative z-[2] mx-auto flex min-h-[100svh] w-full max-w-[1240px] flex-col justify-start px-6 pt-28 pb-[62vw] min-[700px]:min-h-[40rem] min-[700px]:justify-center min-[700px]:pb-16 desk:px-8 min-[1024px]:min-h-[1000px] min-[1024px]:pt-[5.75rem] min-[1024px]:pb-44">
+        <div className="flex w-full min-w-0 flex-col gap-[22px] min-[700px]:max-w-[16.5rem] min-[900px]:max-w-[20rem] min-[1024px]:max-w-[480px] min-[1024px]:-translate-y-7 min-[1024px]:gap-[26px]">
           <h1 className="hero-title m-0 text-[clamp(2rem,6.5vw,3.875rem)] leading-[1.02] font-medium tracking-[-0.035em] text-ink">
             Start your business.
             <br />

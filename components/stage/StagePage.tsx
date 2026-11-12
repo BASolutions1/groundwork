@@ -93,29 +93,26 @@ export function StagePage({ stage }: { stage: StageContent }) {
       {heroImage ? (
         <div className="relative overflow-hidden bg-white">
           <SiteNav overlay />
-          {/*
-            The artwork is 16:9 and full-bleed. The hero stays at least that
-            tall, so a wide window shows the whole stack instead of cropping it.
-            Copy sits in the empty side once the window is wide enough.
-          */}
-          <section className="relative">
-            <div className="pointer-events-none absolute inset-x-0 top-0 hidden aspect-[16/9] w-full min-[680px]:block">
+          <section className="relative overflow-hidden">
+            {/*
+              The artwork stays inside the hero. On a phone it sits along the
+              bottom of the same screen. From 700px it is the full-bleed
+              background, with the copy in the empty half.
+            */}
+            <div className="hero-artwork pointer-events-none absolute inset-x-0 bottom-0 aspect-[16/9] w-full min-[700px]:top-0 min-[700px]:bottom-auto">
               <HeroArtwork src={heroImage} />
             </div>
-            <div className="relative z-[2] mx-auto flex w-full max-w-[1200px] flex-col px-6 pt-32 pb-10 min-[680px]:min-h-[56.25vw] min-[900px]:justify-center min-[900px]:px-8 min-[900px]:pt-24 min-[900px]:pb-14">
+            <div className="relative z-[2] mx-auto flex min-h-[100svh] w-full max-w-[1200px] flex-col justify-start px-6 pt-28 pb-[62vw] min-[700px]:min-h-[56.25vw] min-[700px]:pb-10 min-[700px]:pt-32 min-[900px]:justify-center min-[900px]:px-8 min-[900px]:pt-24 min-[900px]:pb-14">
               <div
-                className={`flex w-full max-w-[500px] flex-col gap-5 ${
+                className={`flex w-full flex-col gap-5 ${
                   copyOnRight
-                    ? "min-[680px]:ml-auto min-[680px]:w-[min(500px,46%)] min-[680px]:max-w-[min(500px,46%)]"
-                    : "min-[680px]:w-[min(500px,46%)] min-[680px]:max-w-[min(500px,46%)]"
+                    ? "min-[700px]:ml-auto min-[700px]:w-[min(500px,46%)] min-[700px]:max-w-[min(500px,46%)]"
+                    : "min-[700px]:w-[min(500px,46%)] min-[700px]:max-w-[min(500px,46%)]"
                 }`}
               >
                 <StageBreadcrumb title={stage.shortTitle} />
                 <StageHeroCopy stage={stage} />
               </div>
-            </div>
-            <div className="relative aspect-[16/9] w-full min-[680px]:hidden">
-              <HeroArtwork src={heroImage} />
             </div>
           </section>
         </div>
