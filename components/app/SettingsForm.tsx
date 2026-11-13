@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 
 import { updateProfile } from "@/app/(app)/app/actions";
 import { BusinessTypeInput } from "@/components/forms/BusinessTypeInput";
+import { ChoiceMenu } from "@/components/ui/popups";
 import type { Profile } from "@/lib/database.types";
 import { PROVINCES } from "@/lib/provinces";
 
@@ -16,6 +17,7 @@ export function SettingsForm({ profile, email }: Props) {
   const [pending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [province, setProvince] = useState(profile.province ?? "");
 
   function onSubmit(formData: FormData) {
     setMessage(null);
@@ -36,7 +38,9 @@ export function SettingsForm({ profile, email }: Props) {
         <h1 className="m-0 text-[clamp(1.6rem,3vw,2rem)] font-medium tracking-[-0.03em]">
           Settings
         </h1>
-        <p className="mt-2 m-0 text-[15px] text-secondary">Your account and business details.</p>
+        <p className="mt-2 m-0 text-[15px] text-secondary">
+          Your account and business details.
+        </p>
       </div>
 
       <div className="flex items-center gap-2">
@@ -87,18 +91,19 @@ export function SettingsForm({ profile, email }: Props) {
         </div>
         <label className="flex flex-col gap-1.5 text-sm font-medium">
           Province
-          <select
+          <ChoiceMenu
+            label="Province"
             name="province"
-            defaultValue={profile.province ?? ""}
-            className="h-11 rounded-control border border-[#D6D6D3] bg-white px-3 text-[15px] font-normal"
-          >
-            <option value="">Select</option>
-            {PROVINCES.map((province) => (
-              <option key={province.code} value={province.code}>
-                {province.name}
-              </option>
-            ))}
-          </select>
+            value={province}
+            onChange={setProvince}
+            placeholder="Select"
+            full
+            options={[
+              { value: "", label: "Select" },
+              ...PROVINCES.map((item) => ({ value: item.code, label: item.name })),
+            ]}
+            className="h-11 rounded-control border border-[#D6D6D3] bg-white px-3 text-left text-[15px] font-normal"
+          />
         </label>
         <button
           type="submit"

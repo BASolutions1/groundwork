@@ -9,8 +9,10 @@ import {
   RowMenu,
   SaveError,
   StatusSelect,
+  iconButton,
   useRows,
 } from "@/components/office/bits";
+import { ChoiceMenu } from "@/components/ui/popups";
 import type { OfficeRisk } from "@/lib/office/types";
 import { OWNERS } from "@/lib/office/types";
 
@@ -20,19 +22,34 @@ function rank(row: OfficeRisk) {
   return row.status === "resolved" ? 1 : 0;
 }
 
-export function RisksBoard({ rows: initial, editorName }: { rows: OfficeRisk[]; editorName: string }) {
+export function RisksBoard({
+  rows: initial,
+  editorName,
+}: {
+  rows: OfficeRisk[];
+  editorName: string;
+}) {
   const { rows, errors, commit } = useRows(initial);
   const [open, setOpen] = useState<Record<string, boolean>>({});
   const [title, setTitle] = useState("");
 
   const ordered = rows.slice().sort((a, b) => {
-    return rank(a) - rank(b) || SEVERITY.indexOf(a.severity) - SEVERITY.indexOf(b.severity) || a.sort - b.sort;
+    return (
+      rank(a) - rank(b) ||
+      SEVERITY.indexOf(a.severity) - SEVERITY.indexOf(b.severity) ||
+      a.sort - b.sort
+    );
   });
 
   function save(row: OfficeRisk, patch: Partial<OfficeRisk>) {
     const next = rows.map((item) =>
       item.id === row.id
-        ? { ...item, ...patch, updated_at: new Date().toISOString(), editor_name: editorName }
+        ? {
+            ...item,
+            ...patch,
+            updated_at: new Date().toISOString(),
+            editor_name: editorName,
+          }
         : item,
     );
     return commit(row.id, next, () => saveOffice("office_risks", row.id, patch));
@@ -59,7 +76,12 @@ export function RisksBoard({ rows: initial, editorName }: { rows: OfficeRisk[]; 
     };
     setTitle("");
     await commit(id, [...rows, created], () =>
-      createOffice("office_risks", { title: nextTitle, severity: "medium", status: "open", sort }),
+      createOffice("office_risks", {
+        title: nextTitle,
+        severity: "medium",
+        status: "open",
+        sort,
+      }),
     );
   }
 
@@ -74,7 +96,9 @@ export function RisksBoard({ rows: initial, editorName }: { rows: OfficeRisk[]; 
           className="h-9 w-full rounded-control border border-[#E5E5E5] px-2 text-[14px]"
         />
       </form>
-      {ordered.length === 0 ? <p className="m-0 text-[14px] text-[#55555A]">No risks yet.</p> : null}
+      {ordered.length === 0 ? (
+        <p className="m-0 text-[14px] text-[#55555A]">No risks yet.</p>
+      ) : null}
       <div className="overflow-x-auto">
         <table className="w-full min-w-[720px] border-collapse text-left text-[14px]">
           <thead>
@@ -96,49 +120,61 @@ export function RisksBoard({ rows: initial, editorName }: { rows: OfficeRisk[]; 
                       <button
                         type="button"
                         aria-label={open[row.id] ? "Hide detail" : "Show detail"}
-                        onClick={() => setOpen((current) => ({ ...current, [row.id]: !current[row.id] }))}
-                        className="cursor-pointer text-[#55555A]"
+                        onClick={() =>
+                          setOpen((current) => ({
+                            ...current,
+                            [row.id]: !current[row.id],
+                          }))
+                        }
+                        className={iconButton}
                       >
                         {open[row.id] ? "▾" : "▸"}
                       </button>
-                      <EditableText value={row.title} onSave={(next) => save(row, { title: next })} />
+                      <EditableText
+                        value={row.title}
+                        onSave={(next) => save(row, { title: next })}
+                      />
                     </div>
                   </td>
                   <td className="border-b border-[#E5E5E5] py-3 pr-3 align-top">
                     <StatusSelect
                       value={row.severity}
                       options={SEVERITY}
-                      onChange={(severity) => save(row, { severity: severity as OfficeRisk["severity"] })}
+                      onChange={(severity) =>
+                        save(row, { severity: severity as OfficeRisk["severity"] })
+                      }
                     />
                   </td>
                   <td className="border-b border-[#E5E5E5] py-3 pr-3 align-top">
                     <StatusSelect
                       value={row.status}
                       options={["open", "watching", "resolved"]}
-                      onChange={(status) => save(row, { status: status as OfficeRisk["status"] })}
+                      onChange={(status) =>
+                        save(row, { status: status as OfficeRisk["status"] })
+                      }
                     />
                   </td>
                   <td className="border-b border-[#E5E5E5] py-3 pr-3 align-top">
-                    <select
-                      aria-label="Owner"
+                    <ChoiceMenu
+                      label="Owner"
                       value={row.owner ?? ""}
-                      onChange={(event) => save(row, { owner: event.target.value || null })}
-                      className="cursor-pointer rounded-control border border-[#E5E5E5] bg-white px-1.5 py-0.5 font-mono text-[11px]"
-                    >
-                      <option value="">None</option>
-                      {OWNERS.map((name) => (
-                        <option key={name} value={name}>
-                          {name}
-                        </option>
-                      ))}
-                    </select>
+                      onChange={(owner) => save(row, { owner: owner || null })}
+                      placeholder="None"
+                      options={[
+                        { value: "", label: "None" },
+                        ...OWNERS.map((name) => ({ value: name, label: name })),
+                      ]}
+                      className="rounded-control border border-[#E5E5E5] bg-white px-1.5 py-0.5 font-mono text-[11px]"
+                    />
                   </td>
                   <td className="border-b border-[#E5E5E5] py-3 pr-3 align-top">
                     <EditableText
                       multiline
                       value={row.mitigation ?? ""}
                       placeholder="Add mitigation"
-                      onSave={(mitigation) => save(row, { mitigation: mitigation || null })}
+                      onSave={(mitigation) =>
+                        save(row, { mitigation: mitigation || null })
+                      }
                     />
                   </td>
                   <td className="border-b border-[#E5E5E5] py-3 align-top">

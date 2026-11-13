@@ -6,7 +6,10 @@ import type {
   OfficeDecision,
   OfficeLink,
   OfficeNote,
+  OfficeFramework,
   OfficePricingTier,
+  OfficeRevenueModel,
+  OfficeRevenueScenario,
   OfficeRisk,
   OfficeTask,
 } from "@/lib/office/types";
@@ -132,6 +135,46 @@ function note(row: Row, names: Map<string, string>): OfficeNote {
   };
 }
 
+function framework(row: Row, names: Map<string, string>): OfficeFramework {
+  return {
+    id: String(row.id),
+    sort: num(row.sort) ?? 0,
+    feature: text(row.feature) ?? "",
+    is_heading: Boolean(row.is_heading),
+    zenbusiness: text(row.zenbusiness),
+    doola: text(row.doola),
+    tailor_brands: text(row.tailor_brands),
+    ownr: text(row.ownr),
+    groundworks: text(row.groundworks),
+    proposal: text(row.proposal),
+    ...editor(row, names),
+  };
+}
+
+function revenueModel(row: Row, names: Map<string, string>): OfficeRevenueModel {
+  return {
+    id: String(row.id),
+    sort: num(row.sort) ?? 0,
+    label: text(row.label) ?? "Revenue assumptions",
+    referral_fee_cad: num(row.referral_fee_cad),
+    intros_per_client: num(row.intros_per_client),
+    caveat: text(row.caveat),
+    ...editor(row, names),
+  };
+}
+
+function revenueScenario(row: Row, names: Map<string, string>): OfficeRevenueScenario {
+  return {
+    id: String(row.id),
+    sort: num(row.sort) ?? 0,
+    name: text(row.name) ?? "",
+    free_users: num(row.free_users),
+    startup_clients: num(row.startup_clients),
+    premium_clients: num(row.premium_clients),
+    ...editor(row, names),
+  };
+}
+
 function link(row: Row, names: Map<string, string>): OfficeLink {
   return {
     id: String(row.id),
@@ -159,7 +202,8 @@ export async function officeCounts(supabase: SupabaseClient) {
   const decisionRows = decisions.data ?? [];
   const riskRows = risks.data ?? [];
   return {
-    tasks: taskRows.filter((row) => row.status === "todo" || row.status === "doing").length,
+    tasks: taskRows.filter((row) => row.status === "todo" || row.status === "doing")
+      .length,
     decisions: decisionRows.filter((row) => row.status === "open").length,
     risks: riskRows.filter((row) => row.status === "open").length,
   };
@@ -173,9 +217,19 @@ export async function loadOverview(supabase: SupabaseClient) {
     supabase.from("office_risks").select("id, severity, status"),
     supabase.from("office_notes").select("*").order("sort"),
     supabase.from("office_links").select("*").order("sort"),
-    supabase.from("office_activity").select("id, actor_name, summary, created_at").order("created_at", { ascending: false }).limit(15),
+    supabase
+      .from("office_activity")
+      .select("id, actor_name, summary, created_at")
+      .order("created_at", { ascending: false })
+      .limit(15),
   ]);
-  const error = tasks.error || decisions.error || risks.error || notes.error || links.error || activity.error;
+  const error =
+    tasks.error ||
+    decisions.error ||
+    risks.error ||
+    notes.error ||
+    links.error ||
+    activity.error;
   return {
     error: error?.message ?? null,
     tasks: ((tasks.data ?? []) as Row[]).map((row) => task(row, names)),
@@ -209,6 +263,28 @@ export async function loadCompetitors(supabase: SupabaseClient) {
   return { error, rows: data.map((row) => competitor(row, names)) };
 }
 
+export async function loadFramework(supabase: SupabaseClient) {
+  const { names, data, error } = await rows(supabase, "office_framework");
+  return { error, rows: data.map((row) => framework(row, names)) };
+}
+
+export async function loadRevenue(supabase: SupabaseClient) {
+  const names = await founderNames(supabase);
+  const [modelResult, scenarioResult] = await Promise.all([
+    supabase.from("office_revenue_model").select("*").order("sort").limit(1),
+    supabase.from("office_revenue_scenarios").select("*").order("sort"),
+  ]);
+  const error = modelResult.error?.message ?? scenarioResult.error?.message ?? null;
+  const modelRow = (modelResult.data ?? [])[0] as Row | undefined;
+  return {
+    error,
+    model: modelRow ? revenueModel(modelRow, names) : null,
+    scenarios: ((scenarioResult.data ?? []) as Row[]).map((row) =>
+      revenueScenario(row, names),
+    ),
+  };
+}
+
 export async function loadPricing(supabase: SupabaseClient) {
   const { names, data, error } = await rows(supabase, "office_pricing_tiers");
   return { error, rows: data.map((row) => tier(row, names)) };
@@ -224,7 +300,11 @@ export async function loadNotes(supabase: SupabaseClient) {
 
 export async function loadNote(supabase: SupabaseClient, slug: string) {
   const names = await founderNames(supabase);
-  const { data, error } = await supabase.from("office_notes").select("*").eq("slug", slug).maybeSingle();
+  const { data, error } = await supabase
+    .from("office_notes")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle();
   if (error || !data) return null;
   return note(data as Row, names);
 }

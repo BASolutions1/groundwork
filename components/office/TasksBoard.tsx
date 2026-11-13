@@ -2,16 +2,23 @@
 
 import { useState } from "react";
 
-import { createOffice, deleteOffice, saveOffice, swapTaskSort } from "@/app/(app)/app/office/actions";
+import {
+  createOffice,
+  deleteOffice,
+  saveOffice,
+  swapTaskSort,
+} from "@/app/(app)/app/office/actions";
 import {
   EditedLine,
   EditableText,
   RowMenu,
   SaveError,
   StatusSelect,
+  iconButton,
   quietButton,
   useRows,
 } from "@/components/office/bits";
+import { ChoiceMenu, DateField } from "@/components/ui/popups";
 import type { OfficeTask, Owner } from "@/lib/office/types";
 import { OWNERS } from "@/lib/office/types";
 
@@ -29,7 +36,13 @@ const FILTERS = [
   { id: "Brandan", label: "Brandan" },
 ] as const;
 
-export function TasksBoard({ rows: initial, editorName }: { rows: OfficeTask[]; editorName: string }) {
+export function TasksBoard({
+  rows: initial,
+  editorName,
+}: {
+  rows: OfficeTask[];
+  editorName: string;
+}) {
   const { rows, errors, commit } = useRows(initial);
   const [filter, setFilter] = useState<(typeof FILTERS)[number]["id"]>("everyone");
   const [open, setOpen] = useState<Record<string, boolean>>({});
@@ -111,7 +124,9 @@ export function TasksBoard({ rows: initial, editorName }: { rows: OfficeTask[]; 
         ))}
       </div>
 
-      {rows.length === 0 ? <p className="m-0 text-[14px] text-[#55555A]">No steps yet.</p> : null}
+      {rows.length === 0 ? (
+        <p className="m-0 text-[14px] text-[#55555A]">No steps yet.</p>
+      ) : null}
 
       {GROUPS.map((group) => {
         const items = visible
@@ -143,18 +158,13 @@ export function TasksBoard({ rows: initial, editorName }: { rows: OfficeTask[]; 
                   aria-label="Step title"
                   className="h-9 min-w-0 flex-1 rounded-control border border-[#E5E5E5] px-2 text-[14px]"
                 />
-                <select
-                  aria-label="Owner"
+                <ChoiceMenu
+                  label="Owner"
                   value={owner}
-                  onChange={(event) => setOwner(event.target.value as Owner)}
+                  onChange={(next) => setOwner(next as Owner)}
+                  options={OWNERS.map((name) => ({ value: name, label: name }))}
                   className="h-9 rounded-control border border-[#E5E5E5] bg-white px-2 text-[13px]"
-                >
-                  {OWNERS.map((name) => (
-                    <option key={name} value={name}>
-                      {name}
-                    </option>
-                  ))}
-                </select>
+                />
                 <button type="submit" className={quietButton}>
                   Add step
                 </button>
@@ -163,7 +173,10 @@ export function TasksBoard({ rows: initial, editorName }: { rows: OfficeTask[]; 
             {collapsed
               ? null
               : items.map((row, index) => (
-                  <div key={row.id} className="flex items-start gap-2 border-b border-[#E5E5E5] py-3">
+                  <div
+                    key={row.id}
+                    className="flex items-start gap-2 border-b border-[#E5E5E5] py-3"
+                  >
                     <input
                       type="checkbox"
                       className="mt-1"
@@ -182,29 +195,24 @@ export function TasksBoard({ rows: initial, editorName }: { rows: OfficeTask[]; 
                             className="font-medium"
                           />
                         </div>
-                        <select
-                          aria-label="Owner"
+                        <ChoiceMenu
+                          label="Owner"
                           value={row.owner ?? "All"}
-                          onChange={(event) => save(row, { owner: event.target.value as Owner })}
-                          className="cursor-pointer rounded-control border border-[#E5E5E5] bg-white px-1.5 py-0.5 font-mono text-[11px]"
-                        >
-                          {OWNERS.map((name) => (
-                            <option key={name} value={name}>
-                              {name}
-                            </option>
-                          ))}
-                        </select>
+                          onChange={(next) => save(row, { owner: next as Owner })}
+                          options={OWNERS.map((name) => ({ value: name, label: name }))}
+                          className="rounded-control border border-[#E5E5E5] bg-white px-1.5 py-0.5 font-mono text-[11px]"
+                        />
                         <StatusSelect
                           value={row.status}
                           options={["doing", "todo", "on_hold", "done"]}
-                          onChange={(status) => save(row, { status: status as OfficeTask["status"] })}
+                          onChange={(status) =>
+                            save(row, { status: status as OfficeTask["status"] })
+                          }
                         />
-                        <input
-                          type="date"
-                          aria-label="Due date"
-                          value={row.due_on ?? ""}
-                          onChange={(event) => save(row, { due_on: event.target.value || null })}
-                          className="rounded-control border border-[#E5E5E5] px-1.5 py-0.5 font-mono text-[11px] text-[#55555A]"
+                        <DateField
+                          label="Due date"
+                          value={row.due_on}
+                          onChange={(due_on) => save(row, { due_on })}
                         />
                       </div>
                       {open[row.id] ? (
@@ -222,8 +230,10 @@ export function TasksBoard({ rows: initial, editorName }: { rows: OfficeTask[]; 
                     <button
                       type="button"
                       aria-label={open[row.id] ? "Hide detail" : "Show detail"}
-                      onClick={() => setOpen((current) => ({ ...current, [row.id]: !current[row.id] }))}
-                      className="cursor-pointer px-1 text-[#55555A]"
+                      onClick={() =>
+                        setOpen((current) => ({ ...current, [row.id]: !current[row.id] }))
+                      }
+                      className={iconButton}
                     >
                       {open[row.id] ? "▾" : "▸"}
                     </button>
@@ -232,7 +242,7 @@ export function TasksBoard({ rows: initial, editorName }: { rows: OfficeTask[]; 
                       aria-label="Move up"
                       disabled={index === 0}
                       onClick={() => move(row, -1, items)}
-                      className="cursor-pointer px-1 text-[#55555A] disabled:opacity-30"
+                      className={iconButton}
                     >
                       ↑
                     </button>
@@ -241,7 +251,7 @@ export function TasksBoard({ rows: initial, editorName }: { rows: OfficeTask[]; 
                       aria-label="Move down"
                       disabled={index === items.length - 1}
                       onClick={() => move(row, 1, items)}
-                      className="cursor-pointer px-1 text-[#55555A] disabled:opacity-30"
+                      className={iconButton}
                     >
                       ↓
                     </button>

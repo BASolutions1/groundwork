@@ -9,7 +9,10 @@ export type OfficeTable =
   | "office_competitors"
   | "office_pricing_tiers"
   | "office_notes"
-  | "office_links";
+  | "office_links"
+  | "office_framework"
+  | "office_revenue_model"
+  | "office_revenue_scenarios";
 
 export type EditorFields = {
   updated_at: string | null;
@@ -98,6 +101,37 @@ export type OfficeLink = EditorFields & {
   label: string;
   url: string;
   note: string | null;
+};
+
+export type OfficeFramework = EditorFields & {
+  id: string;
+  sort: number;
+  feature: string;
+  is_heading: boolean;
+  zenbusiness: string | null;
+  doola: string | null;
+  tailor_brands: string | null;
+  ownr: string | null;
+  groundworks: string | null;
+  proposal: string | null;
+};
+
+export type OfficeRevenueModel = EditorFields & {
+  id: string;
+  sort: number;
+  label: string;
+  referral_fee_cad: number | null;
+  intros_per_client: number | null;
+  caveat: string | null;
+};
+
+export type OfficeRevenueScenario = EditorFields & {
+  id: string;
+  sort: number;
+  name: string;
+  free_users: number | null;
+  startup_clients: number | null;
+  premium_clients: number | null;
 };
 
 export type OfficeActivity = {

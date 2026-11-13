@@ -11,6 +11,7 @@ import {
   SaveError,
   useRows,
 } from "@/components/office/bits";
+import { PricingMatrix } from "@/components/office/PricingMatrix";
 import { formatCad } from "@/lib/office/format";
 import { COMPARISON_COLUMNS, pricingComparison } from "@/lib/office/pricing";
 import type { OfficePatch, OfficePricingTier } from "@/lib/office/types";
@@ -28,11 +29,15 @@ function PriceField({
   onSave: (price: number | null) => void;
 }) {
   const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(tier.price_cad === null ? "" : String(tier.price_cad));
+  const [draft, setDraft] = useState(
+    tier.price_cad === null ? "" : String(tier.price_cad),
+  );
 
   if (!editing) {
     const label =
-      tier.price_cad === null ? tier.price_note || "Add price" : formatCad(tier.price_cad);
+      tier.price_cad === null
+        ? tier.price_note || "Add price"
+        : formatCad(tier.price_cad);
     return (
       <button
         type="button"
@@ -88,7 +93,12 @@ export function PricingBoard({
   function save(row: OfficePricingTier, patch: OfficePatch) {
     const next = rows.map((item) =>
       item.id === row.id
-        ? { ...item, ...patch, updated_at: new Date().toISOString(), editor_name: editorName }
+        ? {
+            ...item,
+            ...patch,
+            updated_at: new Date().toISOString(),
+            editor_name: editorName,
+          }
         : item,
     );
     return commit(row.id, next as OfficePricingTier[], () =>
@@ -129,106 +139,163 @@ export function PricingBoard({
       <p className="m-0 rounded-card bg-[#FFF4C2] px-4 py-3 text-[14px] text-[#111111]">
         All prices are placeholders, not research. Nothing here is agreed.
       </p>
-      <div className="grid grid-cols-1 gap-6 desk:grid-cols-2">
-        {COLUMNS.map((column) => {
-          const tiers = rows.filter((row) => row.option === column.option).sort((a, b) => a.sort - b.sort);
-          return (
-            <section key={column.option} className="flex flex-col gap-3">
-              <h2 className="m-0 text-[16px] font-semibold">{column.title}</h2>
-              {tiers.length === 0 ? (
-                <p className="m-0 text-[14px] text-[#55555A]">No tiers yet.</p>
-              ) : null}
-              {tiers.map((tier) => (
-                <article key={tier.id} className="flex flex-col gap-2 rounded-card border border-[#E5E5E5] p-4">
-                  <div className="flex items-start justify-between gap-2">
-                    <EditableText
-                      value={tier.name}
-                      onSave={(name) => save(tier, { name })}
-                      className="text-[16px] font-semibold"
+      {COLUMNS.map((column) => (
+        <PricingMatrix
+          key={column.option}
+          side={column.option}
+          title={column.title}
+          tiers={rows.filter((row) => row.option === column.option)}
+        />
+      ))}
+      <details className="rounded-card border border-[#E5E5E5]">
+        <summary className="cursor-pointer list-none px-4 py-3 text-[14px] font-medium [&::-webkit-details-marker]:hidden">
+          Edit tier details
+        </summary>
+        <div className="grid grid-cols-1 gap-6 border-t border-[#E5E5E5] p-4 desk:grid-cols-2">
+          {COLUMNS.map((column) => {
+            const tiers = rows
+              .filter((row) => row.option === column.option)
+              .sort((a, b) => a.sort - b.sort);
+            return (
+              <section key={column.option} className="flex flex-col gap-3">
+                <h2 className="m-0 text-[16px] font-semibold">{column.title}</h2>
+                {tiers.length === 0 ? (
+                  <p className="m-0 text-[14px] text-[#55555A]">No tiers yet.</p>
+                ) : null}
+                {tiers.map((tier) => (
+                  <article
+                    key={tier.id}
+                    className="flex flex-col gap-2 rounded-card border border-[#E5E5E5] p-4"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <EditableText
+                        value={tier.name}
+                        onSave={(name) => save(tier, { name })}
+                        className="text-[16px] font-semibold"
+                      />
+                      <RowMenu
+                        onDelete={() =>
+                          commit(
+                            tier.id,
+                            rows.filter((item) => item.id !== tier.id),
+                            () => deleteOffice("office_pricing_tiers", tier.id),
+                          )
+                        }
+                      />
+                    </div>
+                    <PriceField
+                      tier={tier}
+                      onSave={(price_cad) => save(tier, { price_cad })}
                     />
-                    <RowMenu
-                      onDelete={() =>
-                        commit(
-                          tier.id,
-                          rows.filter((item) => item.id !== tier.id),
-                          () => deleteOffice("office_pricing_tiers", tier.id),
-                        )
-                      }
+                    {tier.price_cad !== null || tier.price_note ? (
+                      <EditableText
+                        value={tier.price_note ?? ""}
+                        placeholder="Price note"
+                        onSave={(price_note) =>
+                          save(tier, { price_note: price_note || null })
+                        }
+                        className="text-[13px] text-[#55555A]"
+                      />
+                    ) : (
+                      <EditableText
+                        value=""
+                        placeholder="Price note"
+                        onSave={(price_note) =>
+                          save(tier, { price_note: price_note || null })
+                        }
+                        className="text-[13px] text-[#55555A]"
+                      />
+                    )}
+                    <Field
+                      label="Billing"
+                      value={tier.billing}
+                      onSave={(billing) => save(tier, { billing })}
                     />
-                  </div>
-                  <PriceField tier={tier} onSave={(price_cad) => save(tier, { price_cad })} />
-                  {tier.price_cad !== null || tier.price_note ? (
-                    <EditableText
-                      value={tier.price_note ?? ""}
-                      placeholder="Price note"
-                      onSave={(price_note) => save(tier, { price_note: price_note || null })}
-                      className="text-[13px] text-[#55555A]"
+                    <Field
+                      label="Included"
+                      value={tier.included}
+                      onSave={(included) => save(tier, { included })}
                     />
-                  ) : (
-                    <EditableText
-                      value=""
-                      placeholder="Price note"
-                      onSave={(price_note) => save(tier, { price_note: price_note || null })}
-                      className="text-[13px] text-[#55555A]"
+                    <Field
+                      label="Who it is for"
+                      value={tier.who_for}
+                      onSave={(who_for) => save(tier, { who_for })}
                     />
-                  )}
-                  <Field label="Billing" value={tier.billing} onSave={(billing) => save(tier, { billing })} />
-                  <Field label="Included" value={tier.included} onSave={(included) => save(tier, { included })} />
-                  <Field label="Who it is for" value={tier.who_for} onSave={(who_for) => save(tier, { who_for })} />
-                  <Field label="Market anchor" value={tier.anchor} onSave={(anchor) => save(tier, { anchor })} />
-                  <Field label="Notes" value={tier.notes} onSave={(notes) => save(tier, { notes })} />
-                  <EditedLine name={tier.editor_name} at={tier.updated_at} />
-                  <SaveError id={tier.id} errors={errors} />
-                </article>
-              ))}
-              <form onSubmit={(event) => add(column.option, event)} className="flex gap-2">
-                <input
-                  value={names[column.option]}
-                  onChange={(event) =>
-                    setNames((current) => ({ ...current, [column.option]: event.target.value }))
-                  }
-                  placeholder="Add a tier"
-                  aria-label={`Add ${column.title} tier`}
-                  className="h-9 min-w-0 flex-1 rounded-control border border-[#E5E5E5] px-2 text-[14px]"
-                />
-              </form>
-            </section>
-          );
-        })}
-      </div>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[760px] border-collapse text-left text-[14px]">
-          <thead>
-            <tr className="border-b border-[#E5E5E5]">
-              {COMPARISON_COLUMNS.map((column) => (
-                <th
-                  key={column}
-                  className="py-2 pr-3 font-mono text-[11px] font-normal tracking-[0.06em] text-[#55555A] uppercase"
+                    <Field
+                      label="Market anchor"
+                      value={tier.anchor}
+                      onSave={(anchor) => save(tier, { anchor })}
+                    />
+                    <Field
+                      label="Notes"
+                      value={tier.notes}
+                      onSave={(notes) => save(tier, { notes })}
+                    />
+                    <EditedLine name={tier.editor_name} at={tier.updated_at} />
+                    <SaveError id={tier.id} errors={errors} />
+                  </article>
+                ))}
+                <form
+                  onSubmit={(event) => add(column.option, event)}
+                  className="flex gap-2"
                 >
-                  {column}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {(
-              [
-                ["Startup", comparison.startup],
-                ["Premium", comparison.premium],
-              ] as const
-            ).map(([label, cells]) => (
-              <tr key={label} className="border-b border-[#E5E5E5]">
-                <th className="py-3 pr-3 text-left font-medium">{label}</th>
-                {cells.map((cell, index) => (
-                  <td key={COMPARISON_COLUMNS[index + 1]} className="py-3 pr-3 font-mono text-[13px]">
-                    {cell}
-                  </td>
+                  <input
+                    value={names[column.option]}
+                    onChange={(event) =>
+                      setNames((current) => ({
+                        ...current,
+                        [column.option]: event.target.value,
+                      }))
+                    }
+                    placeholder="Add a tier"
+                    aria-label={`Add ${column.title} tier`}
+                    className="h-9 min-w-0 flex-1 rounded-control border border-[#E5E5E5] px-2 text-[14px]"
+                  />
+                </form>
+              </section>
+            );
+          })}
+        </div>
+      </details>
+      <section className="flex flex-col gap-3">
+        <h2 className="m-0 text-[16px] font-semibold">What a client pays</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[760px] border-collapse text-left text-[14px]">
+            <thead>
+              <tr className="border-b border-[#E5E5E5]">
+                {COMPARISON_COLUMNS.map((column) => (
+                  <th
+                    key={column}
+                    className="py-2 pr-3 font-mono text-[11px] font-normal tracking-[0.06em] text-[#55555A] uppercase"
+                  >
+                    {column}
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {(
+                [
+                  ["Startup", comparison.startup],
+                  ["Premium", comparison.premium],
+                ] as const
+              ).map(([label, cells]) => (
+                <tr key={label} className="border-b border-[#E5E5E5]">
+                  <th className="py-3 pr-3 text-left font-medium">{label}</th>
+                  {cells.map((cell, index) => (
+                    <td
+                      key={COMPARISON_COLUMNS[index + 1]}
+                      className="py-3 pr-3 font-mono text-[13px]"
+                    >
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   );
 }

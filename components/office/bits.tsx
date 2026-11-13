@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
+import { ChoiceMenu } from "@/components/ui/popups";
 import { relativeTime, STATUS_LABEL } from "@/lib/office/format";
 
 const field =
@@ -12,6 +14,9 @@ export const addButton =
 
 export const quietButton =
   "h-9 cursor-pointer rounded-control border border-[#E5E5E5] bg-white px-3 text-[13px] font-medium text-[#111111] hover:bg-[#F4F4F2] disabled:opacity-60";
+
+export const iconButton =
+  "inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-control border border-[#E5E5E5] bg-white text-[13px] leading-none text-[#55555A] hover:bg-[#F4F4F2] disabled:cursor-default disabled:opacity-30";
 
 const STATUS_CLASS: Record<string, string> = {
   todo: "border border-[#E5E5E5] bg-white text-[#111111]",
@@ -35,7 +40,13 @@ export function Label({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function SaveError({ id, errors }: { id: string; errors: Record<string, string> }) {
+export function SaveError({
+  id,
+  errors,
+}: {
+  id: string;
+  errors: Record<string, string>;
+}) {
   if (!errors[id]) return null;
   return <p className="m-0 text-[13px] text-red-700">Could not save. Try again.</p>;
 }
@@ -72,24 +83,31 @@ export function StatusSelect({
   onChange: (value: string) => void;
 }) {
   return (
-    <select
-      aria-label="Status"
+    <ChoiceMenu
+      label="Status"
       value={value}
-      onChange={(event) => onChange(event.target.value)}
-      className={`cursor-pointer rounded-control px-1.5 py-0.5 font-mono text-[11px] ${STATUS_CLASS[value] ?? ""}`}
-    >
-      {options.map((option) => (
-        <option key={option} value={option}>
-          {STATUS_LABEL[option] ?? option}
-        </option>
-      ))}
-    </select>
+      options={options.map((option) => ({
+        value: option,
+        label: STATUS_LABEL[option] ?? option,
+      }))}
+      onChange={onChange}
+      className={`rounded-control py-[5px] pr-2.5 pl-2.5 font-mono text-[11px] leading-none ${STATUS_CLASS[value] ?? ""}`}
+      renderOption={(option) => (
+        <span
+          className={`rounded-control px-1.5 py-0.5 font-mono text-[11px] ${STATUS_CLASS[option.value] ?? ""}`}
+        >
+          {option.label}
+        </span>
+      )}
+    />
   );
 }
 
 export function Pill({ value }: { value: string }) {
   return (
-    <span className={`rounded-control px-1.5 py-0.5 font-mono text-[11px] ${STATUS_CLASS[value] ?? ""}`}>
+    <span
+      className={`rounded-control px-1.5 py-0.5 font-mono text-[11px] ${STATUS_CLASS[value] ?? ""}`}
+    >
       {STATUS_LABEL[value] ?? value}
     </span>
   );
@@ -145,7 +163,11 @@ export function EditableText({
         }}
         className={`block w-full cursor-text text-left whitespace-pre-wrap ${className}`}
       >
-        {value ? value : <span className="font-normal text-[#55555A]">{placeholder}</span>}
+        {value ? (
+          value
+        ) : (
+          <span className="font-normal text-[#55555A]">{placeholder}</span>
+        )}
       </button>
     );
   }
@@ -187,51 +209,148 @@ export function EditableText({
   );
 }
 
+type MenuBox = { top: number; left: number; width: number; upward: boolean };
+
+function menuBox(button: HTMLButtonElement, confirming: boolean): MenuBox {
+  const rect = button.getBoundingClientRect();
+  const width = confirming ? 208 : 132;
+  const height = confirming ? 96 : 40;
+  const upward = rect.bottom + 8 + height > window.innerHeight && rect.top > height + 8;
+  const left = Math.min(Math.max(8, rect.right - width), window.innerWidth - width - 8);
+  return {
+    top: upward ? rect.top - 6 : rect.bottom + 6,
+    left,
+    width,
+    upward,
+  };
+}
+
 export function RowMenu({ onDelete }: { onDelete: () => void }) {
   const [open, setOpen] = useState(false);
   const [confirm, setConfirm] = useState(false);
+  const [box, setBox] = useState<MenuBox | null>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
-  if (confirm) {
-    return (
-      <span className="inline-flex items-center gap-2 text-[12px]">
-        <span className="text-[#55555A]">Delete this?</span>
-        <button type="button" className="cursor-pointer font-medium" onClick={onDelete}>
-          Delete
-        </button>
-        <button
-          type="button"
-          className="cursor-pointer text-[#55555A]"
-          onClick={() => {
-            setConfirm(false);
-            setOpen(false);
-          }}
-        >
-          Cancel
-        </button>
-      </span>
-    );
+  const close = useCallback(() => {
+    setOpen(false);
+    setConfirm(false);
+    setBox(null);
+  }, []);
+
+  function toggle() {
+    if (open) {
+      close();
+      return;
+    }
+    if (buttonRef.current) setBox(menuBox(buttonRef.current, false));
+    setConfirm(false);
+    setOpen(true);
   }
 
+  useEffect(() => {
+    if (!open) return;
+    function place() {
+      if (buttonRef.current) setBox(menuBox(buttonRef.current, confirm));
+    }
+    function onPointer(event: MouseEvent) {
+      const target = event.target as Node;
+      if (buttonRef.current?.contains(target) || menuRef.current?.contains(target))
+        return;
+      close();
+    }
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        close();
+        buttonRef.current?.focus();
+      }
+    }
+    window.addEventListener("resize", place);
+    window.addEventListener("scroll", place, true);
+    document.addEventListener("mousedown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("resize", place);
+      window.removeEventListener("scroll", place, true);
+      document.removeEventListener("mousedown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [close, confirm, open]);
+
   return (
-    <span className="inline-flex items-center">
+    <>
       <button
+        ref={buttonRef}
         type="button"
         aria-label="More"
-        onClick={() => setOpen((value) => !value)}
-        className="cursor-pointer px-1.5 text-[16px] leading-none text-[#55555A]"
+        aria-expanded={open}
+        aria-haspopup="menu"
+        onClick={toggle}
+        className={`${iconButton} ${open ? "border-[#111111] text-[#111111]" : ""}`}
       >
-        ...
+        <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+          <circle cx="3" cy="7" r="1.15" fill="currentColor" />
+          <circle cx="7" cy="7" r="1.15" fill="currentColor" />
+          <circle cx="11" cy="7" r="1.15" fill="currentColor" />
+        </svg>
       </button>
-      {open ? (
-        <button
-          type="button"
-          className="cursor-pointer text-[12px] font-medium"
-          onClick={() => setConfirm(true)}
-        >
-          Delete
-        </button>
-      ) : null}
-    </span>
+      {open && box
+        ? createPortal(
+            <div
+              ref={menuRef}
+              role="menu"
+              style={{
+                position: "fixed",
+                top: box.top,
+                left: box.left,
+                width: box.width,
+                transform: box.upward ? "translateY(-100%)" : undefined,
+              }}
+              className="z-50 rounded-control border border-[#E5E5E5] bg-white p-1 shadow-[0_8px_24px_rgba(17,17,17,0.08)]"
+            >
+              {confirm ? (
+                <div className="flex flex-col gap-2 p-1.5">
+                  <p className="m-0 text-[12px] text-[#55555A]">Delete this?</p>
+                  <div className="flex gap-1.5">
+                    <button
+                      type="button"
+                      autoFocus
+                      className="h-8 flex-1 cursor-pointer rounded-control bg-[#111111] text-[12px] font-medium text-white"
+                      onClick={onDelete}
+                    >
+                      Delete
+                    </button>
+                    <button
+                      type="button"
+                      className="h-8 flex-1 cursor-pointer rounded-control border border-[#E5E5E5] bg-white text-[12px] font-medium text-[#111111] hover:bg-[#F4F4F2]"
+                      onClick={() => {
+                        setConfirm(false);
+                        if (buttonRef.current) setBox(menuBox(buttonRef.current, false));
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  role="menuitem"
+                  autoFocus
+                  className="w-full cursor-pointer rounded-[3px] px-2 py-1.5 text-left text-[13px] font-medium hover:bg-[#F4F4F2]"
+                  onClick={() => {
+                    setConfirm(true);
+                    if (buttonRef.current) setBox(menuBox(buttonRef.current, true));
+                  }}
+                >
+                  Delete
+                </button>
+              )}
+            </div>,
+            document.body,
+          )
+        : null}
+    </>
   );
 }
 
@@ -250,7 +369,11 @@ export function useRows<T extends { id: string }>(initial: T[]) {
     setRows(next);
   }
 
-  async function commit(id: string, next: T[], run: () => Promise<{ error: string | null }>) {
+  async function commit(
+    id: string,
+    next: T[],
+    run: () => Promise<{ error: string | null }>,
+  ) {
     const previous = ref.current;
     replace(next);
     setErrors((current) => ({ ...current, [id]: "" }));

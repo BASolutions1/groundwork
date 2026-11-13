@@ -33,7 +33,9 @@ export function pricingComparison(tiers: PricingSeed[]) {
   const startupBoth = sum(startupLaunch, membership);
   const premiumBoth = sum(premiumLaunch, membership);
   const startupMonths =
-    startup === null || startup === 0 || startupBoth === null ? null : startupBoth / startup;
+    startup === null || startup === 0 || startupBoth === null
+      ? null
+      : startupBoth / startup;
   const premiumMonths =
     startup === null ||
     startup === 0 ||
@@ -58,6 +60,34 @@ export function pricingComparison(tiers: PricingSeed[]) {
       money(premiumBoth),
       months(premiumMonths),
     ],
+  };
+}
+
+export function scenarioMoney(input: {
+  startupPrice: number | null;
+  premiumPrice: number | null;
+  referralFee: number | null;
+  introsPerClient: number | null;
+  startupClients: number | null;
+  premiumClients: number | null;
+}) {
+  const startupClients = input.startupClients ?? 0;
+  const premiumClients = input.premiumClients ?? 0;
+  const subscription =
+    input.startupPrice === null || input.premiumPrice === null
+      ? null
+      : startupClients * input.startupPrice + premiumClients * input.premiumPrice;
+  const referral =
+    input.referralFee === null || input.introsPerClient === null
+      ? null
+      : (startupClients + premiumClients) * input.introsPerClient * input.referralFee;
+  const total =
+    subscription === null || referral === null ? null : subscription + referral;
+  return {
+    subscription,
+    referral,
+    total,
+    year: total === null ? null : total * 12,
   };
 }
 

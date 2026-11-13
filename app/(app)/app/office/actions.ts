@@ -18,7 +18,15 @@ const PATHS = [
 
 const COLUMNS: Record<OfficeTable, string[]> = {
   office_tasks: ["title", "detail", "status", "owner", "due_on", "sort"],
-  office_decisions: ["question", "why", "owner", "status", "decision", "decided_on", "sort"],
+  office_decisions: [
+    "question",
+    "why",
+    "owner",
+    "status",
+    "decision",
+    "decided_on",
+    "sort",
+  ],
   office_risks: ["title", "detail", "severity", "status", "mitigation", "owner", "sort"],
   office_competitors: [
     "name",
@@ -52,6 +60,31 @@ const COLUMNS: Record<OfficeTable, string[]> = {
   ],
   office_notes: ["title", "body", "pinned", "sort"],
   office_links: ["label", "url", "note", "sort"],
+  office_framework: [
+    "feature",
+    "is_heading",
+    "zenbusiness",
+    "doola",
+    "tailor_brands",
+    "ownr",
+    "groundworks",
+    "proposal",
+    "sort",
+  ],
+  office_revenue_model: [
+    "label",
+    "referral_fee_cad",
+    "intros_per_client",
+    "caveat",
+    "sort",
+  ],
+  office_revenue_scenarios: [
+    "name",
+    "free_users",
+    "startup_clients",
+    "premium_clients",
+    "sort",
+  ],
 };
 
 const ENUMS: Record<string, Record<string, readonly string[]>> = {
@@ -79,6 +112,9 @@ const NAME: Record<OfficeTable, string> = {
   office_pricing_tiers: "name",
   office_notes: "title",
   office_links: "label",
+  office_framework: "feature",
+  office_revenue_model: "label",
+  office_revenue_scenarios: "name",
 };
 
 const ENTITY: Record<OfficeTable, string> = {
@@ -89,6 +125,9 @@ const ENTITY: Record<OfficeTable, string> = {
   office_pricing_tiers: "pricing tier",
   office_notes: "note",
   office_links: "link",
+  office_framework: "feature",
+  office_revenue_model: "revenue assumptions",
+  office_revenue_scenarios: "revenue scenario",
 };
 
 const REQUIRED: Record<OfficeTable, string[]> = {
@@ -99,10 +138,29 @@ const REQUIRED: Record<OfficeTable, string[]> = {
   office_pricing_tiers: ["option", "name"],
   office_notes: ["title"],
   office_links: ["label", "url"],
+  office_framework: ["feature"],
+  office_revenue_model: ["label"],
+  office_revenue_scenarios: ["name"],
 };
 
 const DATES = new Set(["due_on", "decided_on", "verified_on"]);
-const REQUIRED_TEXT = new Set(["title", "question", "name", "label", "url", "option"]);
+const REQUIRED_TEXT = new Set([
+  "title",
+  "question",
+  "name",
+  "label",
+  "url",
+  "option",
+  "feature",
+]);
+const NUMBERS = new Set([
+  "price_cad",
+  "referral_fee_cad",
+  "intros_per_client",
+  "free_users",
+  "startup_clients",
+  "premium_clients",
+]);
 
 type Result = { error: string | null; id?: string; slug?: string };
 
@@ -138,7 +196,7 @@ function sanitize(table: OfficeTable, input: OfficePatch) {
       out[key] = value;
       continue;
     }
-    if (key === "sort" || key === "price_cad") {
+    if (key === "sort" || NUMBERS.has(key)) {
       if (value === null || value === "") {
         if (key === "sort") return null;
         out[key] = null;
@@ -149,7 +207,7 @@ function sanitize(table: OfficeTable, input: OfficePatch) {
       out[key] = key === "sort" ? Math.round(parsed) : parsed;
       continue;
     }
-    if (key === "pinned") {
+    if (key === "pinned" || key === "is_heading") {
       out[key] = Boolean(value);
       continue;
     }
@@ -233,7 +291,10 @@ async function logChange(
   });
 }
 
-async function nextSort(ctx: NonNullable<Awaited<ReturnType<typeof gate>>>, table: OfficeTable) {
+async function nextSort(
+  ctx: NonNullable<Awaited<ReturnType<typeof gate>>>,
+  table: OfficeTable,
+) {
   const { data } = await ctx.supabase
     .from(table)
     .select("sort")
@@ -259,7 +320,11 @@ async function uniqueSlug(
   return `${base}-${Date.now()}`;
 }
 
-export async function saveOffice(table: OfficeTable, id: string, patch: OfficePatch): Promise<Result> {
+export async function saveOffice(
+  table: OfficeTable,
+  id: string,
+  patch: OfficePatch,
+): Promise<Result> {
   const ctx = await gate();
   if (!ctx) return fail;
   const clean = sanitize(table, patch);
@@ -280,13 +345,22 @@ export async function saveOffice(table: OfficeTable, id: string, patch: OfficePa
     entity: ENTITY[table],
     entityId: id,
     action: "updated",
-    summary: summaryFor(table, "updated", name, clean, existing.status as string | undefined),
+    summary: summaryFor(
+      table,
+      "updated",
+      name,
+      clean,
+      existing.status as string | undefined,
+    ),
   });
   revalidateOffice(table === "office_notes" ? (existing.slug as string) : undefined);
   return { error: null };
 }
 
-export async function createOffice(table: OfficeTable, values: OfficePatch): Promise<Result> {
+export async function createOffice(
+  table: OfficeTable,
+  values: OfficePatch,
+): Promise<Result> {
   const ctx = await gate();
   if (!ctx) return fail;
   const clean = sanitize(table, values);
@@ -307,7 +381,11 @@ export async function createOffice(table: OfficeTable, values: OfficePatch): Pro
   }
 
   const insert = { ...clean, ...extra };
-  const { data, error } = await ctx.supabase.from(table).insert(insert).select("id").maybeSingle();
+  const { data, error } = await ctx.supabase
+    .from(table)
+    .insert(insert)
+    .select("id")
+    .maybeSingle();
   if (error || !data) return fail;
 
   const name = String(clean[NAME[table]]);
@@ -357,11 +435,20 @@ export async function swapTaskSort(id: string, neighborId: string): Promise<Resu
   const neighbor = data.find((row) => row.id === neighborId);
   if (!current || !neighbor || current.status !== neighbor.status) return fail;
 
-  const first = await ctx.supabase.from("office_tasks").update({ sort: neighbor.sort }).eq("id", current.id);
+  const first = await ctx.supabase
+    .from("office_tasks")
+    .update({ sort: neighbor.sort })
+    .eq("id", current.id);
   if (first.error) return fail;
-  const second = await ctx.supabase.from("office_tasks").update({ sort: current.sort }).eq("id", neighbor.id);
+  const second = await ctx.supabase
+    .from("office_tasks")
+    .update({ sort: current.sort })
+    .eq("id", neighbor.id);
   if (second.error) {
-    await ctx.supabase.from("office_tasks").update({ sort: current.sort }).eq("id", current.id);
+    await ctx.supabase
+      .from("office_tasks")
+      .update({ sort: current.sort })
+      .eq("id", current.id);
     return fail;
   }
 

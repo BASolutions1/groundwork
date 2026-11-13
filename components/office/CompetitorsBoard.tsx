@@ -13,6 +13,7 @@ import {
   quietButton,
   useRows,
 } from "@/components/office/bits";
+import { DateField } from "@/components/ui/popups";
 import { needsReverify, websiteHref } from "@/lib/office/format";
 import type { OfficeCompetitor, OfficePatch } from "@/lib/office/types";
 
@@ -93,6 +94,10 @@ export function CompetitorsBoard({
 
   return (
     <div className="flex flex-col gap-4">
+      <p className="m-0 text-[14px] text-[#55555A]">
+        USD unless marked CAD. Prices are from 2026 review sites. Check the vendor site
+        before using a figure in a pitch.
+      </p>
       <div>
         <button
           type="button"
@@ -136,7 +141,9 @@ export function CompetitorsBoard({
               <Label>{field.label}</Label>
               <textarea
                 value={String(draft[field.key] ?? "")}
-                onChange={(event) => setDraft({ ...draft, [field.key]: event.target.value })}
+                onChange={(event) =>
+                  setDraft({ ...draft, [field.key]: event.target.value })
+                }
                 className="min-h-16 rounded-control border border-[#E5E5E5] px-2 py-1.5 text-[14px]"
               />
             </label>
@@ -149,7 +156,9 @@ export function CompetitorsBoard({
               className="h-9 rounded-control border border-[#E5E5E5] px-2 text-[14px]"
             />
           </label>
-          {draftError ? <p className="m-0 text-[13px] text-red-700">{draftError}</p> : null}
+          {draftError ? (
+            <p className="m-0 text-[13px] text-red-700">{draftError}</p>
+          ) : null}
           <button type="button" className={quietButton} onClick={() => void add()}>
             Save competitor
           </button>
@@ -163,7 +172,10 @@ export function CompetitorsBoard({
           .slice()
           .sort((a, b) => a.sort - b.sort)
           .map((row) => (
-            <article key={row.id} className="flex flex-col gap-3 rounded-card border border-[#E5E5E5] p-4">
+            <article
+              key={row.id}
+              className="flex flex-col gap-3 rounded-card border border-[#E5E5E5] p-4"
+            >
               <div className="flex items-start justify-between gap-3">
                 <EditableText
                   value={row.name}
@@ -225,12 +237,10 @@ export function CompetitorsBoard({
                   className="w-auto"
                 />
                 <span>· Verified:</span>
-                <input
-                  type="date"
-                  aria-label="Verified on"
-                  value={row.verified_on ?? ""}
-                  onChange={(event) => save(row, { verified_on: event.target.value || null })}
-                  className="rounded-control border border-[#E5E5E5] px-1.5 py-0.5 font-mono text-[11px]"
+                <DateField
+                  label="Verified on"
+                  value={row.verified_on}
+                  onChange={(verified_on) => save(row, { verified_on })}
                 />
                 <span>{row.verified_on ? "" : "not verified"}</span>
                 {needsReverify(row.verified_on) ? (
