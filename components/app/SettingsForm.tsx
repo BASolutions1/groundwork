@@ -69,6 +69,7 @@ export function SettingsForm({ profile, email }: Props) {
           <input
             name="fullName"
             defaultValue={profile.full_name ?? ""}
+            placeholder="Your name"
             className="h-11 rounded-control border border-[#D6D6D3] px-3 text-[15px] font-normal"
           />
         </label>
@@ -77,6 +78,7 @@ export function SettingsForm({ profile, email }: Props) {
           <input
             name="businessName"
             defaultValue={profile.business_name ?? ""}
+            placeholder="Your business"
             className="h-11 rounded-control border border-[#D6D6D3] px-3 text-[15px] font-normal"
           />
         </label>

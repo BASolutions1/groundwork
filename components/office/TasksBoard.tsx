@@ -49,7 +49,7 @@ export function TasksBoard({
   const [doneOpen, setDoneOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [owner, setOwner] = useState<Owner>(
-    OWNERS.includes(editorName as Owner) ? (editorName as Owner) : "Joel",
+    OWNERS.includes(editorName as Owner) ? (editorName as Owner) : "All",
   );
 
   function stamp(row: OfficeTask, patch: Partial<OfficeTask>): OfficeTask {

@@ -216,6 +216,7 @@ export function AuthForm({
               type="email"
               required
               autoComplete="email"
+              placeholder="you@email.com"
               className="h-11 rounded-control border border-[#D6D6D3] px-3 text-[15px] font-normal"
             />
           </label>
@@ -254,6 +255,7 @@ export function AuthForm({
               type="email"
               required
               autoComplete="email"
+              placeholder="you@email.com"
               className="h-11 rounded-control border border-[#D6D6D3] px-3 text-[15px] font-normal"
             />
           </label>

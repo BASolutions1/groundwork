@@ -105,7 +105,7 @@ export function OverviewBoard({
       </div>
 
       <section className="rounded-card border border-[#E5E5E5] border-l-[3px] border-l-[#FFF4C2] p-4">
-        <h2 className="m-0 text-[16px] font-semibold">On hold until Brandan is back</h2>
+        <h2 className="m-0 text-[16px] font-semibold">On hold</h2>
         {heldTasks.length + heldDecisions.length === 0 ? (
           <p className="mt-3 mb-0 text-[14px] text-[#55555A]">Nothing is on hold.</p>
         ) : (

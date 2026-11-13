@@ -232,7 +232,7 @@ export function HowItWorks() {
               <div className="step-row mt-1 flex items-center gap-2.5 border-t border-[#ECEEEA] pt-3.5">
                 <span className="size-6 shrink-0 rounded-full bg-[linear-gradient(135deg,#9FD9B5,#1F8A4C)]" />
                 <span className="min-w-0 text-[12px] leading-snug font-medium">
-                  Brandan checked your GST form
+                  Your guide checked your GST form
                 </span>
                 <span className="mono mono-literal ml-auto shrink-0 text-[10px]">today</span>
               </div>
