@@ -23,7 +23,9 @@ export default async function StepPage({ params }: Props) {
   ]);
 
   const steps = normalizeUserSteps(
-    (rows ?? []) as Array<UserStep & { playbook_steps: PlaybookStep | PlaybookStep[] | null }>,
+    (rows ?? []) as Array<
+      UserStep & { playbook_steps: PlaybookStep | PlaybookStep[] | null }
+    >,
   );
 
   const index = steps.findIndex((row) => row.playbook_steps!.slug === slug);
@@ -50,22 +52,19 @@ export default async function StepPage({ params }: Props) {
         {step.title}
       </h1>
       <p className="mt-3 m-0 text-[15px] leading-normal text-secondary">{step.summary}</p>
-      <p className="mt-2 m-0 text-[13px] text-muted">About {step.estimated_minutes} minutes</p>
-
-      <section className="mt-8">
-        <h2 className="m-0 text-[15px] font-semibold">What you&apos;ll do</h2>
-        <ol className="mt-3 m-0 list-decimal space-y-2 pl-5 text-[14px] leading-normal text-secondary">
-          {(step.what_youll_do ?? []).map((line) => (
-            <li key={line}>{line}</li>
-          ))}
-        </ol>
-      </section>
+      <p className="mt-2 m-0 text-[13px] text-muted">
+        About {step.estimated_minutes} minutes
+      </p>
 
       <StepActions
+        key={current.id}
         userStepId={current.id}
         status={current.status}
         withUs={step.with_us}
         notes={current.notes}
+        items={step.what_youll_do ?? []}
+        checked={current.checklist_done ?? []}
+        completionNote={current.completion_note}
         guideProfessionalId={guide?.id ?? null}
         prevSlug={prev?.playbook_steps?.slug ?? null}
         nextSlug={next?.playbook_steps?.slug ?? null}

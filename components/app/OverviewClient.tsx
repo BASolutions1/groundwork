@@ -1,16 +1,41 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useMemo, useState, useSyncExternalStore, useTransition } from "react";
 
+import { setChecklistItem } from "@/app/(app)/app/actions";
+import {
+  CompletionDialog,
+  toCompletionNotice,
+  type CompletionNotice,
+} from "@/components/app/CompletionDialog";
 import { DashboardStack } from "@/components/app/DashboardStack";
 import { StageBlockIcon } from "@/components/app/StageBlockIcon";
-import {
-  professionalsForStage,
-  stageProgress,
-  type UserStepRow,
-} from "@/lib/app-data";
+import { StepChecklist } from "@/components/app/StepChecklist";
+import { professionalsForStage, stageProgress, type UserStepRow } from "@/lib/app-data";
+import { checkedIndexes, toggleIndex } from "@/lib/completion";
 import type { Introduction, Professional } from "@/lib/database.types";
+
+const DISMISS_KEY = "groundwork-dismissed-completion";
+const DISMISS_EVENT = "groundwork-completion-dismiss";
+
+function subscribeDismiss(onStoreChange: () => void) {
+  window.addEventListener(DISMISS_EVENT, onStoreChange);
+  window.addEventListener("storage", onStoreChange);
+  return () => {
+    window.removeEventListener(DISMISS_EVENT, onStoreChange);
+    window.removeEventListener("storage", onStoreChange);
+  };
+}
+
+function readDismissed() {
+  return window.localStorage.getItem(DISMISS_KEY) ?? "";
+}
+
+function pendingDismissed() {
+  return "pending";
+}
 
 type Props = {
   steps: UserStepRow[];
@@ -25,9 +50,19 @@ export function OverviewClient({
   introductions,
   daysSinceStarted,
 }: Props) {
+  const router = useRouter();
   const [hoverStage, setHoverStage] = useState<number | null>(null);
+  const [pending, startTransition] = useTransition();
+  const [checkError, setCheckError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<CompletionNotice | null>(null);
+  const [draft, setDraft] = useState<{ id: string; key: string; checked: number[] } | null>(
+    null,
+  );
+  const dismissedId = useSyncExternalStore(subscribeDismiss, readDismissed, pendingDismissed);
   const stages = useMemo(() => stageProgress(steps), [steps]);
-  const next = steps.find((row) => row.status === "next") ?? steps.find((row) => row.status === "todo");
+  const next =
+    steps.find((row) => row.status === "next") ??
+    steps.find((row) => row.status === "todo");
   const upcoming = steps
     .filter((row) => row.status === "todo" || row.status === "next")
     .slice(0, 3);
@@ -38,6 +73,45 @@ export function OverviewClient({
     introductions.map((item) => [item.professional_id, item.status]),
   );
   const progressPct = steps.length ? Math.round((doneCount / steps.length) * 100) : 0;
+  const latestDone = [...steps]
+    .filter((row) => row.status === "done" && row.done_at && row.completion_note)
+    .sort((a, b) => (b.done_at ?? "").localeCompare(a.done_at ?? ""))[0];
+  const nextItems = next?.playbook_steps?.what_youll_do ?? [];
+  const serverChecked = checkedIndexes(next?.checklist_done, nextItems.length);
+  const serverKey = serverChecked.join(",");
+  const shownChecked =
+    draft && draft.id === next?.id && draft.key === serverKey ? draft.checked : serverChecked;
+
+  function dismissBanner() {
+    if (!latestDone) return;
+    window.localStorage.setItem(DISMISS_KEY, latestDone.id);
+    window.dispatchEvent(new Event(DISMISS_EVENT));
+  }
+
+  function onToggle(index: number, nextChecked: boolean) {
+    if (!next || pending) return;
+    const updated = toggleIndex(shownChecked, index, nextChecked);
+    setDraft({ id: next.id, key: serverKey, checked: updated });
+    setCheckError(null);
+    startTransition(async () => {
+      const result = await setChecklistItem(next.id, index, nextChecked);
+      if (result.error && !result.completed) {
+        setDraft(null);
+        setCheckError(result.error);
+        return;
+      }
+      const nextNotice = toCompletionNotice(result);
+      if (nextNotice) setNotice(nextNotice);
+      if (result.error) setCheckError(result.error);
+      router.refresh();
+    });
+  }
+
+  const showBanner =
+    dismissedId !== "pending" &&
+    latestDone &&
+    dismissedId !== latestDone.id &&
+    notice?.stepId !== latestDone.id;
 
   function scrollToStage(stage: number) {
     document.getElementById(`stage-${stage}`)?.scrollIntoView({
@@ -58,6 +132,33 @@ export function OverviewClient({
           Where you are on the list.
         </p>
       </div>
+
+      {showBanner && latestDone?.playbook_steps ? (
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-card border border-line bg-[#F4F9F5] px-4 py-3">
+          <p className="m-0 min-w-0 flex-1 text-[14px]">
+            <span className="font-medium">
+              Finished {latestDone.playbook_steps.title}.
+            </span>{" "}
+            {next?.playbook_steps ? (
+              <Link
+                href={`/app/steps/${next.playbook_steps.slug}`}
+                className="font-medium text-ink underline-offset-2 hover:underline"
+              >
+                Next: {next.playbook_steps.title}
+              </Link>
+            ) : (
+              <span>That was the last step.</span>
+            )}
+          </p>
+          <button
+            type="button"
+            onClick={dismissBanner}
+            className="cursor-pointer text-[13px] font-medium text-muted hover:text-ink"
+          >
+            Dismiss
+          </button>
+        </div>
+      ) : null}
 
       <div className="grid items-start gap-7 desk:grid-cols-[minmax(0,1.5fr)_minmax(260px,0.85fr)] desk:gap-8">
         <div className="flex min-w-0 flex-col gap-7">
@@ -87,6 +188,27 @@ export function OverviewClient({
               <p className="mt-2 m-0 text-[14px] leading-normal text-secondary">
                 {next.playbook_steps.summary}
               </p>
+              {nextItems.length > 0 ? (
+                <div className="mt-4">
+                  <p className="m-0 text-[13px] text-muted">
+                    Tick each line. This step checks off when the list is complete.
+                  </p>
+                  <p className="mt-3 m-0 text-[12px] text-muted">
+                    {shownChecked.length}/{nextItems.length} done
+                  </p>
+                  <div className="mt-3">
+                    <StepChecklist
+                      items={nextItems}
+                      checked={shownChecked}
+                      disabled={pending}
+                      onToggle={onToggle}
+                    />
+                  </div>
+                  {checkError ? (
+                    <p className="mt-3 m-0 text-sm text-red-700">{checkError}</p>
+                  ) : null}
+                </div>
+              ) : null}
               <div className="mt-4 flex flex-wrap items-center gap-3">
                 <Link
                   href={`/app/steps/${next.playbook_steps.slug}`}
@@ -107,7 +229,9 @@ export function OverviewClient({
           ) : null}
 
           <section>
-            <h2 className="m-0 text-[15px] font-semibold tracking-[-0.015em]">Coming up</h2>
+            <h2 className="m-0 text-[15px] font-semibold tracking-[-0.015em]">
+              Coming up
+            </h2>
             <ul className="mt-3 m-0 list-none divide-y divide-line border-y border-line p-0">
               {upcoming.map((row) => (
                 <li key={row.id} className="flex items-center justify-between gap-4 py-3">
@@ -139,7 +263,9 @@ export function OverviewClient({
                 key={stage.stage}
                 id={`stage-${stage.stage}`}
                 className={`rounded-card border px-4 py-3.5 ${
-                  hoverStage === stage.stage ? "border-done bg-[#F4F9F5]" : "border-line bg-white"
+                  hoverStage === stage.stage
+                    ? "border-done bg-[#F4F9F5]"
+                    : "border-line bg-white"
                 }`}
                 onMouseEnter={() => setHoverStage(stage.stage)}
                 onMouseLeave={() => setHoverStage(null)}
@@ -182,7 +308,9 @@ export function OverviewClient({
                   <li key={person.id} className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="m-0 text-[14px] font-medium">{person.display_name}</p>
-                      <p className="m-0 mt-0.5 text-[12px] text-muted">{person.intro_blurb}</p>
+                      <p className="m-0 mt-0.5 text-[12px] text-muted">
+                        {person.intro_blurb}
+                      </p>
                     </div>
                     <span className="shrink-0 rounded-pill border border-line px-2 py-0.5 text-[10px] font-medium text-secondary">
                       {status === "not yet" ? "not yet" : status}
@@ -208,6 +336,7 @@ export function OverviewClient({
           </section>
         </aside>
       </div>
+      {notice ? <CompletionDialog {...notice} onClose={() => setNotice(null)} /> : null}
     </div>
   );
 }

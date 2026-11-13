@@ -1,6 +1,7 @@
 import { requireUser } from "@/lib/auth";
 import { AppSidebar } from "@/components/app/AppSidebar";
 import { AppTopBar } from "@/components/app/AppTopBar";
+import { isFounderEmail } from "@/lib/office/access";
 import type { Profile, PlaybookStep, UserStep } from "@/lib/database.types";
 
 export const instant = false;
@@ -30,19 +31,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       : row.playbook_steps,
   }));
 
-  const { data: founder } = await supabase
-    .from("founders")
-    .select("user_id")
-    .eq("user_id", user.id)
-    .maybeSingle();
-
   const nextStep = normalized
     .filter((row) => row.status === "next" && row.playbook_steps)
     .sort((a, b) => (a.playbook_steps!.order ?? 0) - (b.playbook_steps!.order ?? 0))[0];
 
   return (
     <div className="flex min-h-screen bg-white">
-      <AppSidebar isFounder={Boolean(founder)} />
+      <AppSidebar isFounder={isFounderEmail(user.email)} />
       <div className="flex min-w-0 flex-1 flex-col">
         <AppTopBar
           profile={(profile as Profile | null) ?? null}

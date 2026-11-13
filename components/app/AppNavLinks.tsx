@@ -58,7 +58,7 @@ export function AppNavLinks({ isFounder = false }: { isFounder?: boolean }) {
                 : "text-secondary hover:bg-[#F4F4F2] hover:text-ink"
             }`}
           >
-            Site office
+            Founder hub
           </Link>
         </div>
       ) : null}

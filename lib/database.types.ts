@@ -1,12 +1,7 @@
 export type StepStatus = "todo" | "next" | "done" | "skipped";
 export type IntroStatus = "requested" | "introduced" | "scheduled" | "done";
 export type ProfessionalRole =
-  | "accountant"
-  | "insurance_broker"
-  | "lawyer"
-  | "bookkeeper"
-  | "web"
-  | "guide";
+  "accountant" | "insurance_broker" | "lawyer" | "bookkeeper" | "web" | "guide";
 
 export type Profile = {
   id: string;
@@ -40,6 +35,8 @@ export type UserStep = {
   status: StepStatus;
   done_at: string | null;
   notes: string | null;
+  checklist_done: number[];
+  completion_note: string | null;
 };
 
 export type Professional = {
@@ -60,23 +57,21 @@ export type Introduction = {
   scheduled_for: string | null;
 };
 
-export const STAGE_META: Record<
-  number,
-  { slug: string; title: string; short: string }
-> = {
-  1: { slug: "register-a-business", title: "Register", short: "Register" },
-  2: { slug: "gst-hst-and-taxes", title: "GST/HST and taxes", short: "Taxes" },
-  3: {
-    slug: "business-bank-account-and-bookkeeping",
-    title: "Bank account and books",
-    short: "Set up",
-  },
-  4: { slug: "wcb-and-insurance", title: "Insurance and coverage", short: "Insurance" },
-  5: {
-    slug: "estimates-invoices-and-getting-paid",
-    title: "Quotes, invoices and getting paid",
-    short: "Get paid",
-  },
-  6: { slug: "tools-that-fit", title: "Tools that fit", short: "Tools" },
-  7: { slug: "get-found-online", title: "Get found online", short: "Get found" },
-};
+export const STAGE_META: Record<number, { slug: string; title: string; short: string }> =
+  {
+    1: { slug: "register-a-business", title: "Register", short: "Register" },
+    2: { slug: "gst-hst-and-taxes", title: "GST/HST and taxes", short: "Taxes" },
+    3: {
+      slug: "business-bank-account-and-bookkeeping",
+      title: "Bank account and books",
+      short: "Set up",
+    },
+    4: { slug: "wcb-and-insurance", title: "Insurance and coverage", short: "Insurance" },
+    5: {
+      slug: "estimates-invoices-and-getting-paid",
+      title: "Quotes, invoices and getting paid",
+      short: "Get paid",
+    },
+    6: { slug: "tools-that-fit", title: "Tools that fit", short: "Tools" },
+    7: { slug: "get-found-online", title: "Get found online", short: "Get found" },
+  };

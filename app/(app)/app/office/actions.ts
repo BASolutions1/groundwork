@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { requireUser } from "@/lib/auth";
+import { isFounderEmail } from "@/lib/office/access";
 import type { OfficePatch, OfficeTable } from "@/lib/office/types";
 
 const PATHS = [
@@ -200,13 +201,17 @@ function summaryFor(
 
 async function gate() {
   const { supabase, user } = await requireUser();
+  if (!isFounderEmail(user.email)) return null;
   const { data } = await supabase
     .from("founders")
-    .select("user_id, display_name")
+    .select("display_name")
     .eq("user_id", user.id)
     .maybeSingle();
-  if (!data) return null;
-  return { supabase, user, name: data.display_name as string };
+  const name =
+    (typeof data?.display_name === "string" && data.display_name) ||
+    user.email?.split("@")[0] ||
+    "Founder";
+  return { supabase, user, name };
 }
 
 async function logChange(

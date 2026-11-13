@@ -16,9 +16,9 @@ export default async function OfficeLayout({ children }: { children: React.React
 
   return (
     <div>
-      <h1 className="m-0 text-[28px] font-semibold text-[#111111]">Site office</h1>
+      <h1 className="m-0 text-[28px] font-semibold text-[#111111]">Founder hub</h1>
       <p className="mt-1 mb-6 text-[14px] text-[#55555A]">
-        Internal. Only the three of us can see this.
+        Internal. Only founders can see this.
       </p>
       <OfficeTabs counts={counts} />
       <div className="pt-6">{children}</div>

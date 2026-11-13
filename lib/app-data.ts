@@ -12,8 +12,10 @@ export function normalizeUserSteps(
     .map((row) => ({
       ...row,
       playbook_steps: Array.isArray(row.playbook_steps)
-        ? row.playbook_steps[0] ?? null
+        ? (row.playbook_steps[0] ?? null)
         : row.playbook_steps,
+      checklist_done: Array.isArray(row.checklist_done) ? row.checklist_done : [],
+      completion_note: row.completion_note ?? null,
     }))
     .filter((row) => row.playbook_steps)
     .sort((a, b) => a.playbook_steps!.order - b.playbook_steps!.order);
